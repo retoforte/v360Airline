@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "qsMDlBQZwL2cfMMLrdFzAOPbaxz/UDe/+2nY2lenlh/OjxY5uiSMSA7m33ukV3F3eu9sgEykBjSxIHc5kArIWA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\khristian.andrade\\OneDrive - Accenture\\Khristian\\Personal\\Viajes360\\Automation\\Code\\CheckTrips360\\CheckTrips360.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\khristian.andrade\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\khristian.andrade\\.nuget\\packages\\selenium.support\\4.9.0\\selenium.support.4.9.0.nupkg.sha512",
+    "C:\\Users\\khristian.andrade\\.nuget\\packages\\selenium.webdriver\\4.9.0\\selenium.webdriver.4.9.0.nupkg.sha512",
+    "C:\\Users\\khristian.andrade\\.nuget\\packages\\selenium.webdriver.chromedriver\\112.0.5615.4900\\selenium.webdriver.chromedriver.112.0.5615.4900.nupkg.sha512"
+  ],
+  "logs": []
+}
