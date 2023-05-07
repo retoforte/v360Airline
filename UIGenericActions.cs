@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Support;
 using System.Globalization;
+using System.Threading;
+using SeleniumExtras.WaitHelpers;
+using System.Xml.Linq;
+
 namespace CheckTrips360
 {
     public static class UIGenericActions
@@ -15,12 +20,16 @@ namespace CheckTrips360
         {
             ID,
             TAG,
-            XPATH
+            XPATH,
+            CSSLOCATOR
         }
 
         public static bool SelectFechaSalida(IWebDriver driver, DateTime fecha) {
-            WaitUntilElementIsVisible("bs-daterangepicker-container", searchType.TAG, driver);
-            IWebElement fullCalendario = driver.FindElement(By.TagName(PageElements.TagFullCalendarios));
+            //WaitUntilElementIsVisible("//bs-days-calendar-view[2]//button[@class='next']", searchType.XPATH, driver);
+            
+            var wait = new WebDriverWait(driver, new TimeSpan(0, 0, 30));
+            var element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.XPath("/html/body/bs-daterangepicker-container")));
+            IWebElement fullCalendario = driver.FindElement(By.XPath("/html/body/bs-daterangepicker-container"));
             bool isSelecteDate = false;
             do
             {
@@ -29,14 +38,20 @@ namespace CheckTrips360
                 int index = 1;
                 foreach (IWebElement calendario in calendarios)
                 {
-                    if (ValidateCalendarioFechasVsRequerida(fecha, calendario))
+                    if (ValidateCalendarioFechasVsRequerida(driver, fecha, calendario))
                     {
                         isSelecteDate = true;
                     }
                     else if (index == 2)
                     {
+                        IWebElement txtCalOrigen = driver.FindElement(By.TagName("app-booker-calendar"));
+                        IWebElement button = calendario.FindElement(By.XPath("//bs-days-calendar-view[2]//button[@class='next']"));
+                        /*((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].removeAttribute('disabled');", button);
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].style.visibility = 'visible'; arguments[0].style.display = 'block';", button);
+                        */
                         //Move the Calendar
-                        IWebElement button = calendario.FindElement(By.CssSelector("button.next")); 
+                        IWebElement button2 = calendario.FindElement(By.XPath("//button[@class='next']"));
+
                         button.Click();
                     }
                     index++;
@@ -46,7 +61,7 @@ namespace CheckTrips360
             return isSelecteDate;
         }
 
-        private static bool ValidateCalendarioFechasVsRequerida(DateTime requerida, IWebElement calendario)
+        private static bool ValidateCalendarioFechasVsRequerida(IWebDriver driver, DateTime requerida, IWebElement calendario)
         {
             IReadOnlyCollection<IWebElement> spanElements = calendario.FindElements(By.CssSelector(PageElements.CssBtnCalendarioFechas));
 
@@ -56,13 +71,13 @@ namespace CheckTrips360
                 string monthName = requerida.ToString("MMMM", new CultureInfo("es-ES")).ToUpper();
                 if (array[0].Text.ToUpper() == monthName && array[1].Text.ToUpper() == requerida.Year.ToString())
                 {
-                    FindDayInCalendarToTriggerClick(requerida, calendario);
+                    FindDayInCalendarToTriggerClick(driver, requerida, calendario);
                     return true;
                 }
             }
             return false;
         }
-        private static Boolean FindDayInCalendarToTriggerClick(DateTime requerida, IWebElement calendario)
+        private static Boolean FindDayInCalendarToTriggerClick(IWebDriver driver, DateTime requerida, IWebElement calendario)
         {
             // Find all the span elements with class "bsdatepickerdaydecorator"
             IReadOnlyCollection<IWebElement> spans = calendario.FindElements(By.CssSelector("span[bsdatepickerdaydecorator]"));
@@ -72,6 +87,9 @@ namespace CheckTrips360
             {
                 if (span.Text.ToUpper().Trim().Equals(requerida.Day.ToString()))
                 {
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].removeAttribute('disabled');", span);
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].style.visibility = 'visible'; arguments[0].style.display = 'block';", span);
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].classList.remove('disabled');", span);
                     span.Click();
                     return true;
                 }
@@ -89,12 +107,14 @@ namespace CheckTrips360
                 elementLocator = By.Id(element);
             else if (type == searchType.TAG)
                 elementLocator = By.TagName(element);
+            else if (type == searchType.CSSLOCATOR)
+                elementLocator = By.CssSelector(element);
 
-            wait.Until(driver =>
-            {
-                IWebElement element = driver.FindElement(elementLocator);
-                return element.Displayed;
+            wait.Until(driver => {
+                var ele = driver.FindElement(elementLocator);
+                return ele != null ? ele.Displayed : false;
             });
+
         }
 
     }
