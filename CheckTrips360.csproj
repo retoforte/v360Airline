@@ -12,6 +12,8 @@
     <PackageReference Include="Selenium.Support" Version="4.9.0" />
     <PackageReference Include="Selenium.WebDriver" Version="4.9.0" />
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="112.0.5615.4900" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.117.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +23,13 @@
     <None Update="chrome-csp-disable2.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Database\viajes360.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Libraries\" />
   </ItemGroup>
 
 </Project>

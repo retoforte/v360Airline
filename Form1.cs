@@ -16,6 +16,7 @@ using CheckTrips360.Utils;
 using OpenQA.Selenium.Remote;
 using System.Threading;
 using System.Reflection;
+using CheckTrips360.DbClasses;
 
 namespace CheckTrips360
 {
@@ -110,14 +111,13 @@ namespace CheckTrips360
         private void btnStartConnection_Click(object sender, EventArgs e)
         {
             ManageProcess manageProcess = new ManageProcess();
-            //manageProcess.KillChrome();
-         //   manageProcess.LaunchChromeWithDebugging();
+            manageProcess.KillChrome();
             manageProcess.KillChromeDriver();
+            manageProcess.LaunchChromeWithDebugging();
+            Thread.Sleep(2000);
             options = new ChromeOptions();
-            /*options.AddArgument("--disable-web-security");
-            options.AddArgument("--user-data-dir=C:\\Users\\khristian.andrade\\AppData\\Local\\Google\\Chrome\\User Data");
-            */string chromeDriverPath = @"C:\temp\"; //chromedriver.exe
-            options.DebuggerAddress = "127.0.0.1:9015";
+
+            options.DebuggerAddress = "127.0.0.1:9014";
             driver = new ChromeDriver(options);
         }
 
@@ -125,6 +125,13 @@ namespace CheckTrips360
         {
             if (driver != null)
                 driver.Quit();
+        }
+
+        private void btnConnectDb_Click(object sender, EventArgs e)
+        {
+            Form1.ActiveForm.BackColor = Color.Red;
+            DBManager bBManager = new DBManager();
+            bBManager.CountQuotation();
         }
     }
 }
