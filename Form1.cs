@@ -17,6 +17,8 @@ using OpenQA.Selenium.Remote;
 using System.Threading;
 using System.Reflection;
 using CheckTrips360.DbClasses;
+using static CheckTrips360.Utils.Enumerados;
+using CheckTrips360.DTO;
 
 namespace CheckTrips360
 {
@@ -40,7 +42,49 @@ namespace CheckTrips360
 
         }
 
+
         private void button1_Click(object sender, EventArgs e)
+        {
+            IniciatBusqueda();
+
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            driver.Quit();
+        }
+
+        private void btnStartConnection_Click(object sender, EventArgs e)
+        {
+            Conectar();
+        }
+
+        private void Conectar()
+        {
+            ManageProcess manageProcess = new ManageProcess();
+            manageProcess.KillChrome();
+            manageProcess.KillChromeDriver();
+            manageProcess.LaunchChromeWithDebugging();
+            Thread.Sleep(3000);
+            options = new ChromeOptions();
+
+            options.DebuggerAddress = "127.0.0.1:9014";
+            driver = new ChromeDriver(options);
+        }
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (driver != null)
+                driver.Quit();
+        }
+
+        private void btnConnectDb_Click(object sender, EventArgs e)
+        {
+            Form1.ActiveForm.BackColor = Color.Red;
+            DBManager bBManager = new DBManager();
+            bBManager.CountQuotation();
+        }
+
+        private void IniciatBusqueda()
         {
             driver.Navigate().GoToUrl("https://www.vivaaerobus.com/");
             driver.Manage().Window.Maximize();
@@ -81,7 +125,7 @@ namespace CheckTrips360
                 txtViajeDestino.SendKeys("VILLAHERMOSA");
                 // Del dropdown buscar el primer elemento y seleccionarlo
                 // Buscando el Destino
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 stationSavedItems = driver.FindElements(By.XPath("//app-station-destination-item//div[contains(@class, 'main-container')]"));
 
                 if (stationSavedItems.Count == 0)
@@ -95,43 +139,47 @@ namespace CheckTrips360
                     firstStationSavedItem = stationSavedItems.First();
                     firstStationSavedItem.Click();
                 }
-                Thread.Sleep(3000);
+                Thread.Sleep(2000);
                 UIGenericActions.SelectFechaSalida(driver, DateTime.Now.AddDays(80));
                 IWebElement btnBuscar = driver.FindElement(By.CssSelector("button.viva-btn.action"));
                 btnBuscar.Click();
+
+
+                FactoryBusqueda factoryBusqueda = new FactoryBusqueda(Aerolinea.VIVA);
+                IBusquedaBrowser browser = factoryBusqueda.GetBuscador();
+                browser.Quotation = CreatQuotation();
+                browser.Driver = driver;
+                browser.BuscarVuelos();
             }
-
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private Quotation CreatQuotation()
         {
-            driver.Quit();
+            return new Quotation()
+            {
+                Origin = txtOrigen.Text,
+                Destination = txtDestino.Text,
+                StartDate = dtpFechaInicio.Value,
+                EndDate = dtpFechaFin.Value,
+                IsRoundTrip = rdbRedondo.Checked,
+                IncludeConexions = chkConexiones.Checked
+            };
         }
 
-        private void btnStartConnection_Click(object sender, EventArgs e)
+        private void rdbSencillo_CheckedChanged(object sender, EventArgs e)
         {
-            ManageProcess manageProcess = new ManageProcess();
-            manageProcess.KillChrome();
-            manageProcess.KillChromeDriver();
-            manageProcess.LaunchChromeWithDebugging();
-            Thread.Sleep(2000);
-            options = new ChromeOptions();
-
-            options.DebuggerAddress = "127.0.0.1:9014";
-            driver = new ChromeDriver(options);
+            rdbRedondo.Checked = false;
         }
 
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        private void rdbRedondo_CheckedChanged(object sender, EventArgs e)
         {
-            if (driver != null)
-                driver.Quit();
+            rdbSencillo.Checked = false;
         }
 
-        private void btnConnectDb_Click(object sender, EventArgs e)
+        private void btnBuscar_Click(object sender, EventArgs e)
         {
-            Form1.ActiveForm.BackColor = Color.Red;
-            DBManager bBManager = new DBManager();
-            bBManager.CountQuotation();
+            Conectar();
+            IniciatBusqueda();
         }
     }
 }

@@ -7,9 +7,9 @@ namespace CheckTrips360.DbClasses
 {
     public class QuotationDA
     {
-        public List<QuotationDTO> GetQuotations()
+        public List<Quotation> GetQuotations()
         {
-            List<QuotationDTO> quotations = new List<QuotationDTO>();
+            List<Quotation> quotations = new List<Quotation>();
 
             string connectionString = ConfigurationManager.ConnectionStrings["viajes360db"].ConnectionString;
             string sql = "SELECT * FROM Quotation";
@@ -24,18 +24,18 @@ namespace CheckTrips360.DbClasses
 
                     while (reader.Read())
                     {
-                        QuotationDTO quotation = new QuotationDTO();
+                        Quotation quotation = new Quotation();
 
-                        quotation.Id = reader.GetInt32(0);
-                        quotation.Origin = reader.GetString(1);
-                        quotation.Destination = reader.GetString(2);
-                        quotation.StartDate = reader.GetDateTime(3);
-                        quotation.EndDate = reader.GetDateTime(4);
-                        quotation.TotalTravelers = reader.GetInt32(5);
-                        quotation.TravelersUnderAge = reader.GetInt32(6);
-                        quotation.IsRoundTrip = reader.GetBoolean(7);
-                        quotation.AirlineName = reader.GetString(8);
-                        quotation.IsInternational = reader.GetBoolean(9);
+                        quotation.Id = reader.GetInt32(reader.GetOrdinal("Id"));
+                        quotation.Origin = reader.GetString(reader.GetOrdinal("Origin"));
+                        quotation.Destination = reader.GetString(reader.GetOrdinal("Destination"));
+                        quotation.StartDate = reader.GetDateTime(reader.GetOrdinal("StartDate"));
+                        quotation.EndDate = reader.GetDateTime(reader.GetOrdinal("EndDate"));
+                        quotation.TotalTravelers = reader.GetInt32(reader.GetOrdinal("TotalTravelers"));
+                        quotation.TravelersUnderage = reader.GetInt32(reader.GetOrdinal("TravelersUnderage"));
+                        quotation.IsRoundTrip = reader.GetBoolean(reader.GetOrdinal("IsRoundTrip"));
+                        quotation.AirlineCatalogId = reader.GetInt32(reader.GetOrdinal("AirlineCatalogId"));
+                        quotation.IsInternational = reader.GetBoolean(reader.GetOrdinal("IsInternational"));
 
                         quotations.Add(quotation);
                     }
