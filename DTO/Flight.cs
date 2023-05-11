@@ -26,5 +26,9 @@ namespace CheckTrips360.DTO
         public int HasConexion { get; set; }
         public string ConexionDetail { get; set; }
         public string AlertaAsientoDetalle { get; set; }
+
+        public string ElementClassId { get; set; } // For internal use only to identify the row
+
+        public List<FlightPackage> Paquetes { get; set; }
     }
 }

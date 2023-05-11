@@ -22,5 +22,8 @@ namespace CheckTrips360.Utils
         void DetectarConexion(Flight flight, IWebElement element);
         void DetectarAlertaAsiento(Flight flight, IWebElement element);
         void BuscarPrecio(Flight flight, IWebElement element);
+
+        void BuscarTUA(Flight flight, IWebElement element);
+        void CargarCostosPaquetes(Flight flight);
     }
 }
