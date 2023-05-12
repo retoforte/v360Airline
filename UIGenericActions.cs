@@ -96,9 +96,9 @@ namespace CheckTrips360
             }
             return false;
         }
-        public static void WaitUntilElementIsVisible(string element, searchType type, IWebDriver driver)
+        public static void WaitUntilElementIsVisible(string element, searchType type, IWebDriver driver, IWebElement parent , bool waitForAllWhenMultiple = false)
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
             By elementLocator = By.Id("");
 
             if (type == searchType.XPATH)
@@ -110,11 +110,16 @@ namespace CheckTrips360
             else if (type == searchType.CSSLOCATOR)
                 elementLocator = By.CssSelector(element);
 
-            wait.Until(driver => {
-                var ele = driver.FindElement(elementLocator);
-                return ele != null ? ele.Displayed : false;
-            });
+            if (waitForAllWhenMultiple)
+                wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(elementLocator));
+            else if (parent != null)
+                wait.Until(ExpectedConditions.ElementIsVisible(elementLocator));
 
+
+            if (parent != null)
+                wait.Until(ExpectedConditions.ElementToBeClickable(parent.FindElement(elementLocator)));
+            else
+                wait.Until(ExpectedConditions.ElementToBeClickable(elementLocator));
         }
 
     }

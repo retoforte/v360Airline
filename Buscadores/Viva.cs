@@ -2,6 +2,9 @@
 using CheckTrips360.Exceptions;
 using CheckTrips360.Utils;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -35,11 +38,40 @@ namespace CheckTrips360.Buscadores
         public void CargarVuelosSalida()
         {
             this._flights = new ConcurrentBag<Flight>();
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
             IReadOnlyCollection<IWebElement> vuelos = Driver.FindElements(By.TagName("app-flight-option"));
-            
+            int totalVuelos = vuelos.Count();
+            Actions actions = new Actions(Driver);
+
+            Thread.Sleep(400);
+            var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(300));
             // Cargar info general de los Vuelos 
-            vuelos.AsParallel().ForAll(vuelo => {
+            for (int  vueloPos = 0; vueloPos < totalVuelos; vueloPos++)
+            {
+                UIGenericActions.WaitUntilElementIsVisible("app-carousel-item", UIGenericActions.searchType.TAG, Driver, null, true);
+
+                IWebElement vuelo = Driver.FindElements(By.TagName("app-flight-option"))[vueloPos];
+
+                /* int yOffset = 10; // subtract 100 pixels from the vertical position
+                 ((IJavaScriptExecutor)Driver).ExecuteScript("window.scrollBy(0, arguments[0]);", +yOffset);
+                 ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView();", vuelo);*/
+
+                // Move the mouse to the vuelo element to set focus
+                //new Actions(Driver).MoveToElement(vuelo).Perform();
+                
+                Thread.Sleep(1000);
+                
+            IWebElement bookingDetailsBody = vuelo.FindElement(By.TagName("app-flight-option-details"));
+                // Scroll to the booking element
+                ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView(true);", bookingDetailsBody);
+                if (vueloPos >= 3)
+                {
+                    IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
+                    js.ExecuteScript("window.scrollBy(0, "+ (50 * vueloPos + (vueloPos / 3) * 200)  + ");");
+                    Thread.Sleep(2000);
+                }
+
+                wait.Until(ExpectedConditions.ElementToBeClickable(vuelo));
                 Flight flight = new Flight();
                 flight.ElementClassId = vuelo.GetAttribute("class");
 
@@ -47,9 +79,17 @@ namespace CheckTrips360.Buscadores
                 DetectarAlertaAsiento(flight, vuelo);
                 BuscarPrecio(flight, vuelo);
 
+                vuelo.Click();                
+                BuscarTUA(flight, vuelo);
+                CargarCostosPaquetes(flight);
+
+                IWebElement btnBack = Driver.FindElement(By.XPath(".//button[@class='viva-btn btn-link edit-flight-btn h-auto']"));
+                btnBack.Click();
+
                 this._flights.Add(flight);
-            });
-            foreach ((IWebElement vuelo, int index) in vuelos.Select((vuelo, index) => (vuelo, index)))
+            }
+          
+           /* foreach ((IWebElement vuelo, int index) in vuelos.Select((vuelo, index) => (vuelo, index)))
             {
                 // Aquí puedes usar el índice si lo necesitas
                 vuelo.Click();
@@ -60,7 +100,7 @@ namespace CheckTrips360.Buscadores
 
                 IWebElement btnBack = Driver.FindElement(By.XPath(".//button[@class='viva-btn btn-link edit-flight-btn h-auto']"));
                 btnBack.Click();
-            }
+            }*/
         }
 
         public void BuscarHorarios(Flight flight, IWebElement element)
@@ -115,29 +155,35 @@ namespace CheckTrips360.Buscadores
         }
         public void BuscarTUA(Flight flight, IWebElement element)
         {
+            UIGenericActions.WaitUntilElementIsVisible(".//button[contains(@class, 'viva-btn')]", UIGenericActions.searchType.XPATH, Driver, element);
+
             IWebElement booking = element.FindElement(By.XPath(".//button[contains(@class, 'viva-btn')]"));
-            Thread.Sleep(1000);
+            UIGenericActions.WaitUntilElementIsVisible(".//button[contains(@class, 'viva-btn')]", UIGenericActions.searchType.XPATH, Driver, null);
+            
+            IWebElement bookingDetailsBody = element.FindElement(By.TagName("app-flight-option-details"));
+            // Scroll to the booking element
+            ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView(true);", bookingDetailsBody);
+         
+            Thread.Sleep(500);
             booking.Click();
 
             IWebElement bookingDetails = Driver.FindElement(By.TagName("app-booking-details"));
             //UIGenericActions.WaitUntilElementIsVisible(".//app-booking-details//app-price//div//div//span[contains(@class, 'default-price')]", UIGenericActions.searchType.XPATH, Driver);
             IWebElement price = Driver.FindElement(By.XPath("//app-price//span[contains(@class,'default-price h3')]"));
             var rr = price.Text.Trim();
-            if (price.Text.Trim() == flight.BasePrice.ToString())
+            if (price.Text.Replace(",","").Trim() == flight.BasePrice.ToString())
             {
-                IWebElement tua = Driver.FindElement(By.CssSelector(".small-title.light.opacity-6"));
-                if (!String.IsNullOrEmpty(tua.Text))
+                IList<IWebElement> tuas = Driver.FindElements(By.CssSelector(".small-title.light.opacity-6"));
+                if (tuas.Count  >0 && !String.IsNullOrEmpty(tuas.ElementAt(0).Text))
                 {
                     Regex regex = new Regex(@"\d+");
-                    Match match = regex.Match(tua.Text);
+                    Match match = regex.Match(tuas.ElementAt(0).Text);
                     string numero = match.Value;
                     flight.TUA = Convert.ToDecimal(numero);
 
                     booking = bookingDetails.FindElement(By.XPath(".//button[contains(@class, 'viva-btn action')]"));
                     booking.Click();
                 }
-                else
-                    throw new UIValidationMessageException("Error de busqueda, imposible determinar el TUA.");
             }
             else
             {
@@ -147,8 +193,8 @@ namespace CheckTrips360.Buscadores
 
         public void CargarCostosPaquetes(Flight flight)
         {
-            Thread.Sleep(4000);
-            UIGenericActions.WaitUntilElementIsVisible(".//app-flight-pack-card", UIGenericActions.searchType.XPATH, Driver);
+            Thread.Sleep(3000);
+            UIGenericActions.WaitUntilElementIsVisible(".//app-flight-pack-card", UIGenericActions.searchType.XPATH, Driver, null, false);
 
             IReadOnlyCollection<IWebElement> paquetes = Driver.FindElements(By.XPath(".//app-flight-pack-card"));
             flight.Paquetes = new List<FlightPackage>();

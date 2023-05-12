@@ -107,10 +107,10 @@ namespace CheckTrips360
             rdbViajeSencillo.Click();
             divViajeOrigen.Click();
 
-            txtViajeOrigen.SendKeys("MONTERREY");
+            txtViajeOrigen.SendKeys("GUADALAJARA");
             Thread.Sleep(2000);
             // Del dropdown buscar el primer elemento y seleccionarlo
-            UIGenericActions.WaitUntilElementIsVisible("//app-station-results", UIGenericActions.searchType.XPATH, driver);
+            UIGenericActions.WaitUntilElementIsVisible("//app-station-results", UIGenericActions.searchType.XPATH, driver, null);
             //divResultadoOrigen = driver.FindElements(By.XPath("//app-station-item//div[contains(@class, 'main-container')]"));
             IReadOnlyCollection<IWebElement> stationSavedItems = driver.FindElements(By.XPath("//app-station-item//div[contains(@class, 'main-container')]"));
 
@@ -122,7 +122,7 @@ namespace CheckTrips360
                 IWebElement firstStationSavedItem = stationSavedItems.First();
                 firstStationSavedItem.Click();
 
-                txtViajeDestino.SendKeys("VILLAHERMOSA");
+                txtViajeDestino.SendKeys("CANCUN");
                 // Del dropdown buscar el primer elemento y seleccionarlo
                 // Buscando el Destino
                 Thread.Sleep(500);
