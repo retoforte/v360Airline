@@ -98,7 +98,7 @@ namespace CheckTrips360
         }
         public static void WaitUntilElementIsVisible(string element, searchType type, IWebDriver driver, IWebElement parent , bool waitForAllWhenMultiple = false)
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
             By elementLocator = By.Id("");
 
             if (type == searchType.XPATH)
