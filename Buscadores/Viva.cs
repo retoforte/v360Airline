@@ -39,32 +39,25 @@ namespace CheckTrips360.Buscadores
         {
             this._flights = new ConcurrentBag<Flight>();
             Thread.Sleep(1000);
+
             IReadOnlyCollection<IWebElement> vuelos = Driver.FindElements(By.TagName("app-flight-option"));
             int totalVuelos = vuelos.Count();
             Actions actions = new Actions(Driver);
 
             Thread.Sleep(400);
-            var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(300));
+            var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(2));
             // Cargar info general de los Vuelos 
             for (int  vueloPos = 0; vueloPos < totalVuelos; vueloPos++)
             {
                 UIGenericActions.WaitUntilElementIsVisible("app-carousel-item", UIGenericActions.searchType.TAG, Driver, null, true);
 
-                IWebElement vuelo = Driver.FindElements(By.TagName("app-flight-option"))[vueloPos];
-
-                /* int yOffset = 10; // subtract 100 pixels from the vertical position
-                 ((IJavaScriptExecutor)Driver).ExecuteScript("window.scrollBy(0, arguments[0]);", +yOffset);
-                 ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView();", vuelo);*/
-
-                // Move the mouse to the vuelo element to set focus
-                //new Actions(Driver).MoveToElement(vuelo).Perform();
-                
+                IWebElement vuelo = Driver.FindElements(By.TagName("app-flight-option"))[vueloPos];           
                 Thread.Sleep(1000);
                 
-            IWebElement bookingDetailsBody = vuelo.FindElement(By.TagName("app-flight-option-details"));
+                IWebElement bookingDetailsBody = vuelo.FindElement(By.TagName("app-flight-option-details"));
                 // Scroll to the booking element
                 ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView(true);", bookingDetailsBody);
-                if (vueloPos >= 3)
+                if (vueloPos >= 2)
                 {
                     IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
                     js.ExecuteScript("window.scrollBy(0, "+ (50 * vueloPos + (vueloPos / 3) * 200)  + ");");
@@ -74,6 +67,8 @@ namespace CheckTrips360.Buscadores
                 wait.Until(ExpectedConditions.ElementToBeClickable(vuelo));
                 Flight flight = new Flight();
                 flight.ElementClassId = vuelo.GetAttribute("class");
+                if (DetectarConexion(flight, vuelo) && !Quotation.IncludeConexions)
+                    continue;
 
                 BuscarHorarios(flight, vuelo);
                 DetectarAlertaAsiento(flight, vuelo);
@@ -86,6 +81,7 @@ namespace CheckTrips360.Buscadores
                 IWebElement btnBack = Driver.FindElement(By.XPath(".//button[@class='viva-btn btn-link edit-flight-btn h-auto']"));
                 btnBack.Click();
 
+                flight.Quotation = this.Quotation;
                 this._flights.Add(flight);
             }
           
@@ -117,9 +113,9 @@ namespace CheckTrips360.Buscadores
             newStartTime = new DateTime(this.Quotation.EndDate.Year, this.Quotation.EndDate.Month, this.Quotation.EndDate.Day, int.Parse(hora[0]), int.Parse(hora[1]), 0);
             flight.EndDate = newStartTime;
 
-            DetectarConexion(flight, vueloInfo);
+            //DetectarConexion(flight, vueloInfo);
         }
-        public void DetectarConexion(Flight flight, IWebElement element)
+        public bool DetectarConexion(Flight flight, IWebElement element)
         {
             IWebElement vueloInfo = element.FindElement(By.TagName("app-flight-brief-graph"));
             IReadOnlyCollection<IWebElement> tieneConexion = vueloInfo.FindElements(By.XPath(".//div[@class='mt-5 text-nowrap ng-star-inserted']/span[position()<=2]"));
@@ -128,7 +124,9 @@ namespace CheckTrips360.Buscadores
             {
                 flight.HasConexion = 1;
                 flight.ConexionDetail = tieneConexion.ElementAt(0).Text + " - " + tieneConexion.ElementAt(1).Text;
+                return true;
             }
+            return false;
         }
 
         public void DetectarAlertaAsiento(Flight flight, IWebElement element)
@@ -205,6 +203,9 @@ namespace CheckTrips360.Buscadores
             LIGTH.Price = Convert.ToDecimal(paquetes.ElementAt(1).FindElement(By.XPath("(.//span[@class='default-price h3'])[2]")).Text );
             EXTRA.Price = Convert.ToDecimal(paquetes.ElementAt(2).FindElement(By.XPath("(.//span[@class='default-price h3'])[2]")).Text);
             SMART.Price = Convert.ToDecimal(paquetes.ElementAt(3).FindElement(By.XPath("(.//span[@class='default-price h3'])[2]")).Text);
+            flight.Paquetes.Add(LIGTH);
+            flight.Paquetes.Add(EXTRA);
+            flight.Paquetes.Add(SMART);
 
         }
     }

@@ -21,5 +21,7 @@ namespace CheckTrips360.DTO
         public AirlineCatalog AirlineCatalog { get; set; }
 
         public bool IncludeConexions { get; set; }
+        public string Emision { get; set; }
+        
     }
 }

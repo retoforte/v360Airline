@@ -34,7 +34,8 @@ namespace CheckTrips360.Utils
         public void LaunchChromeWithDebugging()
         {
             string chromeExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
-            string chromeOptions = "--remote-debugging-port=9014 --disable-web-security --user-data-dir=\"C:\\Users\\kandrade\\AppData\\Local\\Google\\Chrome\\User Data\" --disable-web-security --user-data-dir=~/chromeTemp";
+            string chromeOptions = "--remote-debugging-port=9014 --disable-web-security --disable-web-security --user-data-dir=~/chromeTemp";
+            //string chromeOptions = "--remote-debugging-port=9014 --disable-web-security --user-data-dir=\"C:\\Users\\kandrade\\AppData\\Local\\Google\\Chrome\\User Data\" --disable-web-security --user-data-dir=~/chromeTemp";
 
             ProcessStartInfo startInfo = new ProcessStartInfo(chromeExecutablePath, chromeOptions);
             Process.Start(startInfo);

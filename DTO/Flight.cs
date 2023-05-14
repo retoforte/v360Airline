@@ -12,8 +12,6 @@ namespace CheckTrips360.DTO
         public int Id { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string Origin { get; set; }
-        public string Destination { get; set; }
         public decimal BasePrice { get; set; }
         public bool HasScale { get; set; }
         public int AvailableSeats { get; set; }
@@ -30,5 +28,49 @@ namespace CheckTrips360.DTO
         public string ElementClassId { get; set; } // For internal use only to identify the row
 
         public List<FlightPackage> Paquetes { get; set; }
+
+
+        public string Origin
+        {
+            get
+            {
+                if (Quotation != null)
+                    return Quotation.Origin;
+                return "";
+            }
+            set { if (Quotation != null)  Quotation.Origin = value; }
+        }
+        public string Destination
+        {
+            get
+            {
+                if (Quotation != null)
+                    return Quotation.Destination;
+                return "x";
+            }
+            set { if (Quotation != null) Quotation.Destination = value; }
+        }
+
+        public string Airline
+        {
+            get
+            {
+                if (Quotation !=null && Quotation.AirlineCatalogId > 0)
+                    return (Airlines.VIVA.ToString().ToUpper());
+                return "y";
+            }
+            set { if (Quotation != null) Quotation.AirlineCatalogId = 1;  }
+        }
+
+        public string Emision
+        {
+            get
+            {
+                if (Quotation != null)
+                    return Quotation.Emision;
+                return "z";
+            }
+            set { if (Quotation != null) Quotation.Emision = value; }
+        }
     }
 }

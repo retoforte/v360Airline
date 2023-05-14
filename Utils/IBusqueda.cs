@@ -19,7 +19,7 @@ namespace CheckTrips360.Utils
         void CargarVuelosSalida();
         void BuscarHorarios(Flight flight, IWebElement element);
 
-        void DetectarConexion(Flight flight, IWebElement element);
+        bool DetectarConexion(Flight flight, IWebElement element);
         void DetectarAlertaAsiento(Flight flight, IWebElement element);
         void BuscarPrecio(Flight flight, IWebElement element);
 

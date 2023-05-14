@@ -28,10 +28,18 @@ namespace CheckTrips360
         TAG,
         XPATH
     }
+
+    public enum Airlines
+    {
+        VIVA = 1,
+        AEROMEXICO = 2
+    }
+
     public partial class Form1 : Form
     {
         IWebDriver driver = null;
         ChromeOptions options = new ChromeOptions();
+        IBusquedaBrowser browser;
         public Form1()
         {
             InitializeComponent();
@@ -45,7 +53,7 @@ namespace CheckTrips360
 
         private void button1_Click(object sender, EventArgs e)
         {
-            IniciatBusqueda();
+            
 
         }
 
@@ -84,7 +92,7 @@ namespace CheckTrips360
             bBManager.CountQuotation();
         }
 
-        private void IniciatBusqueda()
+        private List<Flight> IniciatBusqueda()
         {
             driver.Navigate().GoToUrl("https://www.vivaaerobus.com/");
             driver.Manage().Window.Maximize();
@@ -107,7 +115,7 @@ namespace CheckTrips360
             rdbViajeSencillo.Click();
             divViajeOrigen.Click();
 
-            txtViajeOrigen.SendKeys("GUADALAJARA");
+            txtViajeOrigen.SendKeys(txtOrigen.Text);
             Thread.Sleep(2000);
             // Del dropdown buscar el primer elemento y seleccionarlo
             UIGenericActions.WaitUntilElementIsVisible("//app-station-results", UIGenericActions.searchType.XPATH, driver, null);
@@ -122,7 +130,7 @@ namespace CheckTrips360
                 IWebElement firstStationSavedItem = stationSavedItems.First();
                 firstStationSavedItem.Click();
 
-                txtViajeDestino.SendKeys("CANCUN");
+                txtViajeDestino.SendKeys(txtDestino.Text);
                 // Del dropdown buscar el primer elemento y seleccionarlo
                 // Buscando el Destino
                 Thread.Sleep(500);
@@ -146,11 +154,13 @@ namespace CheckTrips360
 
 
                 FactoryBusqueda factoryBusqueda = new FactoryBusqueda(Aerolinea.VIVA);
-                IBusquedaBrowser browser = factoryBusqueda.GetBuscador();
+                browser = factoryBusqueda.GetBuscador();
                 browser.Quotation = CreatQuotation();
                 browser.Driver = driver;
-                browser.BuscarVuelos();
+
+                return browser.BuscarVuelos();
             }
+            return new List<Flight>();
         }
 
         private Quotation CreatQuotation()
@@ -162,7 +172,9 @@ namespace CheckTrips360
                 StartDate = dtpFechaInicio.Value,
                 EndDate = dtpFechaFin.Value,
                 IsRoundTrip = rdbRedondo.Checked,
-                IncludeConexions = chkConexiones.Checked
+                IncludeConexions = chkConexiones.Checked,
+                AirlineCatalogId = ((int)Airlines.VIVA),
+                Emision = txtEmision.Text
             };
         }
 
@@ -181,5 +193,47 @@ namespace CheckTrips360
             Conectar();
             IniciatBusqueda();
         }
+
+        private void btnBuscar_Click_1(object sender, EventArgs e)
+        {
+            Conectar();
+            CargarGrid(IniciatBusqueda());
+        }
+
+        private void CargarGrid(List<Flight> vuelos)
+        {
+            MappingsFlights mappingsFlights = new MappingsFlights();
+            dtgVuelos.AutoGenerateColumns = true;
+            dtgVuelos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            //dtgVuelos.ReadOnly = true;
+
+             DataGridViewCheckBoxColumn checkColumn = new DataGridViewCheckBoxColumn();
+             checkColumn.Name = "Check";
+             checkColumn.HeaderText = "Select";
+             dtgVuelos.Columns.Add(checkColumn);
+
+            
+            if (this.browser.Quotation.AirlineCatalogId == ((int)Airlines.VIVA))
+            {
+                List<VviaFlight> vviaFlights = vuelos.Select(mappingsFlights.MapToVviaFlight).ToList();
+                dtgVuelos.DataSource = vviaFlights.ToDataTableViva();
+            }
+            dtgVuelos.Columns["StartDate"].DefaultCellStyle.Format = "dd-MM-yyyy HH:mm";
+            dtgVuelos.Columns["EndDate"].DefaultCellStyle.Format = "dd-MM-yyyy HH:mm";
+            dtgVuelos.Columns["BasePrice"].DefaultCellStyle.Format = "C2";
+            dtgVuelos.Columns["TUA"].DefaultCellStyle.Format = "C2";
+            dtgVuelos.Columns["CostoEmision"].DefaultCellStyle.Format = "C2";
+
+            if (this.browser.Quotation.AirlineCatalogId == ((int)Airlines.VIVA))
+            {
+                dtgVuelos.Columns["Ligth"].DefaultCellStyle.Format = "C2";
+                dtgVuelos.Columns["Extra"].DefaultCellStyle.Format = "C2";
+                dtgVuelos.Columns["Smart"].DefaultCellStyle.Format = "C2";
+            };
+
+        }
+
+
+
     }
 }

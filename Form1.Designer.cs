@@ -30,227 +30,269 @@ namespace CheckTrips360
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
-            btnClose = new Button();
-            btnStartConnection = new Button();
-            btnConnectDb = new Button();
-            panel1 = new Panel();
-            chkConexiones = new CheckBox();
-            btnBuscar = new Button();
-            dtpFechaFin = new DateTimePicker();
-            dtpFechaInicio = new DateTimePicker();
-            rdbSencillo = new RadioButton();
-            rdbRedondo = new RadioButton();
-            label2 = new Label();
-            txtDestino = new TextBox();
-            label1 = new Label();
-            txtOrigen = new TextBox();
-            panel2 = new Panel();
-            btnAeromexico = new Button();
-            btnViva = new Button();
-            panel1.SuspendLayout();
-            panel2.SuspendLayout();
-            SuspendLayout();
+            this.components = new System.ComponentModel.Container();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
+            this.btnStartConnection = new System.Windows.Forms.Button();
+            this.btnConnectDb = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.txtEmision = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.chkConexiones = new System.Windows.Forms.CheckBox();
+            this.btnBuscar = new System.Windows.Forms.Button();
+            this.dtpFechaFin = new System.Windows.Forms.DateTimePicker();
+            this.dtpFechaInicio = new System.Windows.Forms.DateTimePicker();
+            this.rdbSencillo = new System.Windows.Forms.RadioButton();
+            this.rdbRedondo = new System.Windows.Forms.RadioButton();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtDestino = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtOrigen = new System.Windows.Forms.TextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnAeromexico = new System.Windows.Forms.Button();
+            this.btnViva = new System.Windows.Forms.Button();
+            this.dtgVuelos = new System.Windows.Forms.DataGridView();
+            this.vivaBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgVuelos)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vivaBindingSource)).BeginInit();
+            this.SuspendLayout();
             // 
             // button1
             // 
-            button1.Location = new System.Drawing.Point(21, 376);
-            button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(148, 29);
-            button1.TabIndex = 0;
-            button1.Text = "Cotizar Viaje Sencillo";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            this.button1.Location = new System.Drawing.Point(736, 60);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(166, 30);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Cotizar Viaje Sencillo";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // btnClose
             // 
-            btnClose.Location = new System.Drawing.Point(192, 376);
-            btnClose.Name = "btnClose";
-            btnClose.Size = new System.Drawing.Size(87, 29);
-            btnClose.TabIndex = 1;
-            btnClose.Text = "Close";
-            btnClose.UseVisualStyleBackColor = true;
-            btnClose.Click += btnClose_Click;
+            this.btnClose.Location = new System.Drawing.Point(928, 60);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(98, 30);
+            this.btnClose.TabIndex = 1;
+            this.btnClose.Text = "Close";
+            this.btnClose.UseVisualStyleBackColor = true;
             // 
             // btnStartConnection
             // 
-            btnStartConnection.Location = new System.Drawing.Point(21, 341);
-            btnStartConnection.Name = "btnStartConnection";
-            btnStartConnection.Size = new System.Drawing.Size(135, 29);
-            btnStartConnection.TabIndex = 2;
-            btnStartConnection.Text = "Conectar Browser";
-            btnStartConnection.UseVisualStyleBackColor = true;
-            btnStartConnection.Click += btnStartConnection_Click;
+            this.btnStartConnection.Location = new System.Drawing.Point(736, 23);
+            this.btnStartConnection.Name = "btnStartConnection";
+            this.btnStartConnection.Size = new System.Drawing.Size(152, 30);
+            this.btnStartConnection.TabIndex = 2;
+            this.btnStartConnection.Text = "Conectar Browser";
+            this.btnStartConnection.UseVisualStyleBackColor = true;
             // 
             // btnConnectDb
             // 
-            btnConnectDb.Location = new System.Drawing.Point(185, 341);
-            btnConnectDb.Name = "btnConnectDb";
-            btnConnectDb.Size = new System.Drawing.Size(94, 29);
-            btnConnectDb.TabIndex = 3;
-            btnConnectDb.Text = "Test DB Connection";
-            btnConnectDb.UseVisualStyleBackColor = true;
-            btnConnectDb.Click += btnConnectDb_Click;
+            this.btnConnectDb.Location = new System.Drawing.Point(920, 23);
+            this.btnConnectDb.Name = "btnConnectDb";
+            this.btnConnectDb.Size = new System.Drawing.Size(106, 30);
+            this.btnConnectDb.TabIndex = 3;
+            this.btnConnectDb.Text = "Test DB Connection";
+            this.btnConnectDb.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
-            panel1.Controls.Add(chkConexiones);
-            panel1.Controls.Add(btnBuscar);
-            panel1.Controls.Add(dtpFechaFin);
-            panel1.Controls.Add(dtpFechaInicio);
-            panel1.Controls.Add(rdbSencillo);
-            panel1.Controls.Add(rdbRedondo);
-            panel1.Controls.Add(label2);
-            panel1.Controls.Add(txtDestino);
-            panel1.Controls.Add(label1);
-            panel1.Controls.Add(txtOrigen);
-            panel1.Location = new System.Drawing.Point(17, 118);
-            panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(624, 170);
-            panel1.TabIndex = 4;
+            this.panel1.Controls.Add(this.txtEmision);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.chkConexiones);
+            this.panel1.Controls.Add(this.btnBuscar);
+            this.panel1.Controls.Add(this.dtpFechaFin);
+            this.panel1.Controls.Add(this.dtpFechaInicio);
+            this.panel1.Controls.Add(this.rdbSencillo);
+            this.panel1.Controls.Add(this.rdbRedondo);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.txtDestino);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.txtOrigen);
+            this.panel1.Location = new System.Drawing.Point(19, 124);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(702, 178);
+            this.panel1.TabIndex = 4;
+            // 
+            // txtEmision
+            // 
+            this.txtEmision.Location = new System.Drawing.Point(14, 149);
+            this.txtEmision.Name = "txtEmision";
+            this.txtEmision.Size = new System.Drawing.Size(168, 29);
+            this.txtEmision.TabIndex = 11;
+            this.txtEmision.Text = "300.00";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label3.Location = new System.Drawing.Point(14, 125);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(84, 21);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "$ Emisión";
             // 
             // chkConexiones
             // 
-            chkConexiones.AutoSize = true;
-            chkConexiones.Location = new System.Drawing.Point(401, 84);
-            chkConexiones.Name = "chkConexiones";
-            chkConexiones.Size = new System.Drawing.Size(151, 24);
-            chkConexiones.TabIndex = 9;
-            chkConexiones.Text = "Incluir Conexiones";
-            chkConexiones.UseVisualStyleBackColor = true;
+            this.chkConexiones.AutoSize = true;
+            this.chkConexiones.Location = new System.Drawing.Point(451, 88);
+            this.chkConexiones.Name = "chkConexiones";
+            this.chkConexiones.Size = new System.Drawing.Size(159, 25);
+            this.chkConexiones.TabIndex = 9;
+            this.chkConexiones.Text = "Incluir Conexiones";
+            this.chkConexiones.UseVisualStyleBackColor = true;
             // 
             // btnBuscar
             // 
-            btnBuscar.Location = new System.Drawing.Point(381, 114);
-            btnBuscar.Name = "btnBuscar";
-            btnBuscar.Size = new System.Drawing.Size(220, 42);
-            btnBuscar.TabIndex = 8;
-            btnBuscar.Text = "Buscar";
-            btnBuscar.UseVisualStyleBackColor = true;
-            btnBuscar.Click += btnBuscar_Click;
+            this.btnBuscar.Location = new System.Drawing.Point(429, 120);
+            this.btnBuscar.Name = "btnBuscar";
+            this.btnBuscar.Size = new System.Drawing.Size(248, 44);
+            this.btnBuscar.TabIndex = 8;
+            this.btnBuscar.Text = "Buscar";
+            this.btnBuscar.UseVisualStyleBackColor = true;
+            this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click_1);
             // 
             // dtpFechaFin
             // 
-            dtpFechaFin.CustomFormat = "dd/MM/yyyy";
-            dtpFechaFin.Format = DateTimePickerFormat.Custom;
-            dtpFechaFin.Location = new System.Drawing.Point(204, 82);
-            dtpFechaFin.Name = "dtpFechaFin";
-            dtpFechaFin.Size = new System.Drawing.Size(150, 27);
-            dtpFechaFin.TabIndex = 7;
+            this.dtpFechaFin.CustomFormat = "dd/MM/yyyy";
+            this.dtpFechaFin.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpFechaFin.Location = new System.Drawing.Point(230, 86);
+            this.dtpFechaFin.Name = "dtpFechaFin";
+            this.dtpFechaFin.Size = new System.Drawing.Size(168, 29);
+            this.dtpFechaFin.TabIndex = 7;
             // 
             // dtpFechaInicio
             // 
-            dtpFechaInicio.CustomFormat = "dd/MM/yyyy";
-            dtpFechaInicio.Format = DateTimePickerFormat.Custom;
-            dtpFechaInicio.Location = new System.Drawing.Point(12, 82);
-            dtpFechaInicio.Name = "dtpFechaInicio";
-            dtpFechaInicio.Size = new System.Drawing.Size(150, 27);
-            dtpFechaInicio.TabIndex = 6;
+            this.dtpFechaInicio.CustomFormat = "dd/MM/yyyy";
+            this.dtpFechaInicio.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpFechaInicio.Location = new System.Drawing.Point(14, 86);
+            this.dtpFechaInicio.Name = "dtpFechaInicio";
+            this.dtpFechaInicio.Size = new System.Drawing.Size(168, 29);
+            this.dtpFechaInicio.TabIndex = 6;
             // 
             // rdbSencillo
             // 
-            rdbSencillo.AutoSize = true;
-            rdbSencillo.Checked = true;
-            rdbSencillo.Location = new System.Drawing.Point(401, 39);
-            rdbSencillo.Name = "rdbSencillo";
-            rdbSencillo.Size = new System.Drawing.Size(82, 24);
-            rdbSencillo.TabIndex = 5;
-            rdbSencillo.TabStop = true;
-            rdbSencillo.Text = "Sencillo";
-            rdbSencillo.UseVisualStyleBackColor = true;
-            rdbSencillo.CheckedChanged += rdbSencillo_CheckedChanged;
+            this.rdbSencillo.AutoSize = true;
+            this.rdbSencillo.Checked = true;
+            this.rdbSencillo.Location = new System.Drawing.Point(451, 41);
+            this.rdbSencillo.Name = "rdbSencillo";
+            this.rdbSencillo.Size = new System.Drawing.Size(85, 25);
+            this.rdbSencillo.TabIndex = 5;
+            this.rdbSencillo.TabStop = true;
+            this.rdbSencillo.Text = "Sencillo";
+            this.rdbSencillo.UseVisualStyleBackColor = true;
             // 
             // rdbRedondo
             // 
-            rdbRedondo.AutoSize = true;
-            rdbRedondo.Location = new System.Drawing.Point(489, 39);
-            rdbRedondo.Name = "rdbRedondo";
-            rdbRedondo.Size = new System.Drawing.Size(91, 24);
-            rdbRedondo.TabIndex = 4;
-            rdbRedondo.Text = "Redondo";
-            rdbRedondo.UseVisualStyleBackColor = true;
-            rdbRedondo.CheckedChanged += rdbRedondo_CheckedChanged;
+            this.rdbRedondo.AutoSize = true;
+            this.rdbRedondo.Location = new System.Drawing.Point(550, 41);
+            this.rdbRedondo.Name = "rdbRedondo";
+            this.rdbRedondo.Size = new System.Drawing.Size(94, 25);
+            this.rdbRedondo.TabIndex = 4;
+            this.rdbRedondo.Text = "Redondo";
+            this.rdbRedondo.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
-            label2.AutoSize = true;
-            label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            label2.Location = new System.Drawing.Point(204, 16);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(63, 20);
-            label2.TabIndex = 3;
-            label2.Text = "Destino";
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label2.Location = new System.Drawing.Point(230, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(69, 21);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Destino";
             // 
             // txtDestino
             // 
-            txtDestino.Location = new System.Drawing.Point(204, 39);
-            txtDestino.Name = "txtDestino";
-            txtDestino.Size = new System.Drawing.Size(173, 27);
-            txtDestino.TabIndex = 2;
+            this.txtDestino.Location = new System.Drawing.Point(230, 41);
+            this.txtDestino.Name = "txtDestino";
+            this.txtDestino.Size = new System.Drawing.Size(194, 29);
+            this.txtDestino.TabIndex = 2;
+            this.txtDestino.Text = "Villahermosa";
             // 
             // label1
             // 
-            label1.AutoSize = true;
-            label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            label1.Location = new System.Drawing.Point(12, 16);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(56, 20);
-            label1.TabIndex = 1;
-            label1.Text = "Origen";
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label1.Location = new System.Drawing.Point(14, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(62, 21);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Origen";
             // 
             // txtOrigen
             // 
-            txtOrigen.Location = new System.Drawing.Point(12, 39);
-            txtOrigen.Name = "txtOrigen";
-            txtOrigen.Size = new System.Drawing.Size(176, 27);
-            txtOrigen.TabIndex = 0;
+            this.txtOrigen.Location = new System.Drawing.Point(14, 41);
+            this.txtOrigen.Name = "txtOrigen";
+            this.txtOrigen.Size = new System.Drawing.Size(198, 29);
+            this.txtOrigen.TabIndex = 0;
+            this.txtOrigen.Text = "Guadalajara";
             // 
             // panel2
             // 
-            panel2.Controls.Add(btnAeromexico);
-            panel2.Controls.Add(btnViva);
-            panel2.Location = new System.Drawing.Point(17, 22);
-            panel2.Name = "panel2";
-            panel2.Size = new System.Drawing.Size(624, 73);
-            panel2.TabIndex = 5;
+            this.panel2.Controls.Add(this.btnAeromexico);
+            this.panel2.Controls.Add(this.btnViva);
+            this.panel2.Location = new System.Drawing.Point(19, 23);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(702, 77);
+            this.panel2.TabIndex = 5;
             // 
             // btnAeromexico
             // 
-            btnAeromexico.Image = Properties.Resources.aeromexico;
-            btnAeromexico.Location = new System.Drawing.Point(227, 9);
-            btnAeromexico.Name = "btnAeromexico";
-            btnAeromexico.Size = new System.Drawing.Size(189, 50);
-            btnAeromexico.TabIndex = 1;
-            btnAeromexico.UseVisualStyleBackColor = true;
+            this.btnAeromexico.Image = global::CheckTrips360.Properties.Resources.aeromexico;
+            this.btnAeromexico.Location = new System.Drawing.Point(255, 9);
+            this.btnAeromexico.Name = "btnAeromexico";
+            this.btnAeromexico.Size = new System.Drawing.Size(213, 52);
+            this.btnAeromexico.TabIndex = 1;
+            this.btnAeromexico.UseVisualStyleBackColor = true;
             // 
             // btnViva
             // 
-            btnViva.Image = Properties.Resources.viva;
-            btnViva.Location = new System.Drawing.Point(14, 9);
-            btnViva.Name = "btnViva";
-            btnViva.Size = new System.Drawing.Size(189, 50);
-            btnViva.TabIndex = 0;
-            btnViva.UseVisualStyleBackColor = true;
+            this.btnViva.Image = global::CheckTrips360.Properties.Resources.viva;
+            this.btnViva.Location = new System.Drawing.Point(16, 9);
+            this.btnViva.Name = "btnViva";
+            this.btnViva.Size = new System.Drawing.Size(213, 52);
+            this.btnViva.TabIndex = 0;
+            this.btnViva.UseVisualStyleBackColor = true;
+            // 
+            // dtgVuelos
+            // 
+            this.dtgVuelos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtgVuelos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtgVuelos.Location = new System.Drawing.Point(23, 327);
+            this.dtgVuelos.Name = "dtgVuelos";
+            this.dtgVuelos.RowHeadersWidth = 53;
+            this.dtgVuelos.RowTemplate.Height = 31;
+            this.dtgVuelos.Size = new System.Drawing.Size(967, 377);
+            this.dtgVuelos.TabIndex = 6;
+            // 
+            // vivaBindingSource
+            // 
+            this.vivaBindingSource.DataSource = typeof(CheckTrips360.Buscadores.Viva);
             // 
             // Form1
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(760, 441);
-            Controls.Add(panel2);
-            Controls.Add(panel1);
-            Controls.Add(btnConnectDb);
-            Controls.Add(btnStartConnection);
-            Controls.Add(btnClose);
-            Controls.Add(button1);
-            Name = "Form1";
-            Text = "Form1";
-            FormClosed += Form1_FormClosed;
-            Load += Form1_Load;
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
-            panel2.ResumeLayout(false);
-            ResumeLayout(false);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1071, 716);
+            this.Controls.Add(this.dtgVuelos);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.btnConnectDb);
+            this.Controls.Add(this.btnStartConnection);
+            this.Controls.Add(this.btnClose);
+            this.Controls.Add(this.button1);
+            this.Name = "Form1";
+            this.Text = "Form1";
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dtgVuelos)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vivaBindingSource)).EndInit();
+            this.ResumeLayout(false);
+
         }
 
         #endregion
@@ -273,5 +315,9 @@ namespace CheckTrips360
         private Button btnAeromexico;
         private Button btnViva;
         private CheckBox chkConexiones;
+        private DataGridView dtgVuelos;
+        private Label label3;
+        private TextBox txtEmision;
+        private BindingSource vivaBindingSource;
     }
 }
