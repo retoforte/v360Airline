@@ -28,8 +28,8 @@ namespace CheckTrips360.DTO
         public string ElementClassId { get; set; } // For internal use only to identify the row
 
         public List<FlightPackage> Paquetes { get; set; }
-
-
+        public string Tipo { get; set; }
+        public string NumVuelo { get; set; }
         public string Origin
         {
             get
@@ -71,6 +71,36 @@ namespace CheckTrips360.DTO
                 return "z";
             }
             set { if (Quotation != null) Quotation.Emision = value; }
+        }
+
+        public string FechaSalida
+        {
+            get
+            {
+                if (Quotation != null)
+                    return Quotation.StartDate.ToString("dd/MM/yyyy");
+                return "z";
+            }
+            set { if (Quotation != null) Quotation.StartDate = Convert.ToDateTime(value); }
+        }
+        public string FechaRegreso
+        {
+            get
+            {
+                if (Quotation != null)
+                    return Quotation.EndDate.ToString("dd/MM/yyyy");
+                return "z";
+            }
+            set { if (Quotation != null) Quotation.EndDate = Convert.ToDateTime(value); }
+        }
+
+        public string Horario
+        {
+            get
+            {
+                  return StartDate.ToString("HH:mm") +"-"+ EndDate.ToString("HH:mm");
+            }
+            set { if (Quotation != null) Quotation.EndDate = Convert.ToDateTime(value); }
         }
     }
 }

@@ -22,6 +22,6 @@ namespace CheckTrips360.DTO
 
         public bool IncludeConexions { get; set; }
         public string Emision { get; set; }
-        
+        public int MaxResults { get; set; }
     }
 }

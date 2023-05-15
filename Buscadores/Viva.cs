@@ -29,7 +29,7 @@ namespace CheckTrips360.Buscadores
 
         public List<Flight> Flights { get { return this._flights.ToList();  } set { this._flights = new ConcurrentBag<Flight>(value);  } }
 
-        public List<Flight> BuscarVuelos()
+        public List<Flight> BuscarVuelos(string tipo)
         {
             CargarVuelosSalida();
             return Flights;
@@ -66,6 +66,7 @@ namespace CheckTrips360.Buscadores
 
                 wait.Until(ExpectedConditions.ElementToBeClickable(vuelo));
                 Flight flight = new Flight();
+                flight.Tipo = "Salida";
                 flight.ElementClassId = vuelo.GetAttribute("class");
                 if (DetectarConexion(flight, vuelo) && !Quotation.IncludeConexions)
                     continue;
@@ -83,20 +84,10 @@ namespace CheckTrips360.Buscadores
 
                 flight.Quotation = this.Quotation;
                 this._flights.Add(flight);
+
+                if (this.Quotation.MaxResults > 0 && this._flights.Count() == this.Quotation.MaxResults)
+                    break;
             }
-          
-           /* foreach ((IWebElement vuelo, int index) in vuelos.Select((vuelo, index) => (vuelo, index)))
-            {
-                // Aquí puedes usar el índice si lo necesitas
-                vuelo.Click();
-                Flight flight = this._flights.FirstOrDefault(f => f.ElementClassId == vuelo.GetAttribute("class"));
-
-                BuscarTUA(flight, vuelo);
-                CargarCostosPaquetes(flight);
-
-                IWebElement btnBack = Driver.FindElement(By.XPath(".//button[@class='viva-btn btn-link edit-flight-btn h-auto']"));
-                btnBack.Click();
-            }*/
         }
 
         public void BuscarHorarios(Flight flight, IWebElement element)
@@ -161,8 +152,19 @@ namespace CheckTrips360.Buscadores
             IWebElement bookingDetailsBody = element.FindElement(By.TagName("app-flight-option-details"));
             // Scroll to the booking element
             ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView(true);", bookingDetailsBody);
-         
+
             Thread.Sleep(500);
+            // Obtener los Numeros de Vuelo, Maximo 2 
+            IList<IWebElement> segmentDetails = bookingDetailsBody.FindElements(By.XPath(".//app-flight-segment-details"));
+            foreach (var segment in segmentDetails)
+            {
+                var vuelo = segment.FindElements(By.XPath(".//span[@class='small-title opacity-5']"));
+                if (vuelo.Count > 0)
+                {
+                    var www = vuelo[0].Text;
+                    flight.NumVuelo = (flight.NumVuelo != null && flight.NumVuelo.Length > 0) ? flight.NumVuelo + "/" + www.Trim() : www.Trim();
+                }
+            }
             booking.Click();
 
             IWebElement bookingDetails = Driver.FindElement(By.TagName("app-booking-details"));

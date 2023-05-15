@@ -27,7 +27,9 @@ namespace CheckTrips360.Utils
                 ConexionDetail = flight.ConexionDetail == null ? "" : flight.ConexionDetail,
                 AlertaAsientoDetalle = flight.AlertaAsientoDetalle == null? "" : flight.AlertaAsientoDetalle,
                 ElementClassId = flight.ElementClassId,
-                Paquetes = flight.Paquetes
+                Paquetes = flight.Paquetes,
+                Tipo = flight.Tipo,
+                NumVuelo = flight.NumVuelo
             };
 
             return vviaFlight;

@@ -37,9 +37,12 @@ namespace CheckTrips360
 
     public partial class Form1 : Form
     {
+        MappingsFlights mappingsFlights = new MappingsFlights();
         IWebDriver driver = null;
         ChromeOptions options = new ChromeOptions();
         IBusquedaBrowser browser;
+        private Quotation mainQuotation;
+        List<Flight> vuelosSeleccionados;
         public Form1()
         {
             InitializeComponent();
@@ -155,10 +158,11 @@ namespace CheckTrips360
 
                 FactoryBusqueda factoryBusqueda = new FactoryBusqueda(Aerolinea.VIVA);
                 browser = factoryBusqueda.GetBuscador();
-                browser.Quotation = CreatQuotation();
+                this.mainQuotation = CreatQuotation();
+                browser.Quotation = this.mainQuotation;
                 browser.Driver = driver;
 
-                return browser.BuscarVuelos();
+                return browser.BuscarVuelos("Salida");
             }
             return new List<Flight>();
         }
@@ -174,7 +178,8 @@ namespace CheckTrips360
                 IsRoundTrip = rdbRedondo.Checked,
                 IncludeConexions = chkConexiones.Checked,
                 AirlineCatalogId = ((int)Airlines.VIVA),
-                Emision = txtEmision.Text
+                Emision = txtEmision.Text,
+                MaxResults = int.Parse(txtMaxResults.Text)
             };
         }
 
@@ -202,8 +207,8 @@ namespace CheckTrips360
 
         private void CargarGrid(List<Flight> vuelos)
         {
-            MappingsFlights mappingsFlights = new MappingsFlights();
             dtgVuelos.AutoGenerateColumns = true;
+            dtgVuelos.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dtgVuelos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             //dtgVuelos.ReadOnly = true;
 
@@ -218,11 +223,21 @@ namespace CheckTrips360
                 List<VviaFlight> vviaFlights = vuelos.Select(mappingsFlights.MapToVviaFlight).ToList();
                 dtgVuelos.DataSource = vviaFlights.ToDataTableViva();
             }
-            dtgVuelos.Columns["StartDate"].DefaultCellStyle.Format = "dd-MM-yyyy HH:mm";
-            dtgVuelos.Columns["EndDate"].DefaultCellStyle.Format = "dd-MM-yyyy HH:mm";
+
+            //dtgVuelos.Columns["StartDate"].DefaultCellStyle.Format = "dd-MM-yyyy HH:mm";
+            //dtgVuelos.Columns["EndDate"].DefaultCellStyle.Format = "dd-MM-yyyy HH:mm";
             dtgVuelos.Columns["BasePrice"].DefaultCellStyle.Format = "C2";
             dtgVuelos.Columns["TUA"].DefaultCellStyle.Format = "C2";
-            dtgVuelos.Columns["CostoEmision"].DefaultCellStyle.Format = "C2";
+            dtgVuelos.Columns["Emision"].DefaultCellStyle.Format = "C2";
+
+            dtgVuelos.Columns["ConexionDetail"].HeaderText = "Conexion";
+            dtgVuelos.Columns["ConexionDetail"].DefaultCellStyle.BackColor = Color.Gray;
+            dtgVuelos.Columns["AlertaAsientoDetalle"].HeaderText = "Disponibilidad";
+            dtgVuelos.Columns["AlertaAsientoDetalle"].DefaultCellStyle.BackColor = Color.Gainsboro;
+            dtgVuelos.Columns["AlertaAsientoDetalle"].DefaultCellStyle.Font = new Font("Arial", 09, FontStyle.Bold);
+
+            dtgVuelos.Columns["NumVuelo"].DefaultCellStyle.Font =  new Font("Arial", 09, FontStyle.Bold);
+            dtgVuelos.Columns["Horario"].DefaultCellStyle.Font = new Font("Arial", 09, FontStyle.Bold);
 
             if (this.browser.Quotation.AirlineCatalogId == ((int)Airlines.VIVA))
             {
@@ -230,10 +245,25 @@ namespace CheckTrips360
                 dtgVuelos.Columns["Extra"].DefaultCellStyle.Format = "C2";
                 dtgVuelos.Columns["Smart"].DefaultCellStyle.Format = "C2";
             };
-
+            this.vuelosSeleccionados = vuelos;
         }
 
+        private void btnExportarExcel_Click(object sender, EventArgs e)
+        {
+            ExcelTransfer excelTransfer = new ExcelTransfer();
+            if (this.mainQuotation != null)
+            {
+                if (this.browser.Quotation.AirlineCatalogId == ((int)Airlines.VIVA))
+                {
+                    List<VviaFlight> vviaFlights = this.vuelosSeleccionados.Select(mappingsFlights.MapToVviaFlight).ToList();
+                    excelTransfer.StartProcesingSpreadSheet("", vviaFlights);
+                }
 
+               // excelTransfer.StartProcesingSpreadSheet("");
+                excelTransfer.CopyCotizador(this.mainQuotation.Origin.ToUpper()+"-"+this.mainQuotation.Destination.ToUpper());
+                MessageBox.Show("File copied successfully!");
+            }
+        }
 
     }
 }

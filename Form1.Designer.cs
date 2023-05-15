@@ -53,6 +53,9 @@ namespace CheckTrips360
             this.btnViva = new System.Windows.Forms.Button();
             this.dtgVuelos = new System.Windows.Forms.DataGridView();
             this.vivaBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.btnExportarExcel = new System.Windows.Forms.Button();
+            this.txtMaxResults = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgVuelos)).BeginInit();
@@ -97,6 +100,8 @@ namespace CheckTrips360
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.txtMaxResults);
+            this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.txtEmision);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.chkConexiones);
@@ -111,7 +116,7 @@ namespace CheckTrips360
             this.panel1.Controls.Add(this.txtOrigen);
             this.panel1.Location = new System.Drawing.Point(19, 124);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(702, 178);
+            this.panel1.Size = new System.Drawing.Size(702, 184);
             this.panel1.TabIndex = 4;
             // 
             // txtEmision
@@ -146,7 +151,7 @@ namespace CheckTrips360
             // 
             this.btnBuscar.Location = new System.Drawing.Point(429, 120);
             this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(248, 44);
+            this.btnBuscar.Size = new System.Drawing.Size(248, 58);
             this.btnBuscar.TabIndex = 8;
             this.btnBuscar.Text = "Buscar";
             this.btnBuscar.UseVisualStyleBackColor = true;
@@ -272,11 +277,40 @@ namespace CheckTrips360
             // 
             this.vivaBindingSource.DataSource = typeof(CheckTrips360.Buscadores.Viva);
             // 
+            // btnExportarExcel
+            // 
+            this.btnExportarExcel.Location = new System.Drawing.Point(745, 249);
+            this.btnExportarExcel.Name = "btnExportarExcel";
+            this.btnExportarExcel.Size = new System.Drawing.Size(245, 39);
+            this.btnExportarExcel.TabIndex = 7;
+            this.btnExportarExcel.Text = "Exportar a Excel";
+            this.btnExportarExcel.UseVisualStyleBackColor = true;
+            this.btnExportarExcel.Visible = false;
+            this.btnExportarExcel.Click += new System.EventHandler(this.btnExportarExcel_Click);
+            // 
+            // txtMaxResults
+            // 
+            this.txtMaxResults.Location = new System.Drawing.Point(230, 149);
+            this.txtMaxResults.Name = "txtMaxResults";
+            this.txtMaxResults.Size = new System.Drawing.Size(168, 29);
+            this.txtMaxResults.TabIndex = 13;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label4.Location = new System.Drawing.Point(230, 125);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(101, 21);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "Max Results";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1071, 716);
+            this.Controls.Add(this.btnExportarExcel);
             this.Controls.Add(this.dtgVuelos);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
@@ -319,5 +353,8 @@ namespace CheckTrips360
         private Label label3;
         private TextBox txtEmision;
         private BindingSource vivaBindingSource;
+        private Button btnExportarExcel;
+        private TextBox txtMaxResults;
+        private Label label4;
     }
 }
