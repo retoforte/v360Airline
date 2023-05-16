@@ -29,7 +29,9 @@ namespace CheckTrips360.Utils
                 ElementClassId = flight.ElementClassId,
                 Paquetes = flight.Paquetes,
                 Tipo = flight.Tipo,
-                NumVuelo = flight.NumVuelo
+                NumVuelo = flight.NumVuelo,
+                CreatedDate = flight.CreatedDate,
+                Order = flight.Order
             };
 
             return vviaFlight;

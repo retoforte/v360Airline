@@ -31,19 +31,23 @@ namespace CheckTrips360
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.button1 = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnStartConnection = new System.Windows.Forms.Button();
             this.btnConnectDb = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.rdbRedondo = new System.Windows.Forms.RadioButton();
+            this.rdbSencillo = new System.Windows.Forms.RadioButton();
+            this.txtMaxResults = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.txtEmision = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.chkConexiones = new System.Windows.Forms.CheckBox();
             this.btnBuscar = new System.Windows.Forms.Button();
             this.dtpFechaFin = new System.Windows.Forms.DateTimePicker();
             this.dtpFechaInicio = new System.Windows.Forms.DateTimePicker();
-            this.rdbSencillo = new System.Windows.Forms.RadioButton();
-            this.rdbRedondo = new System.Windows.Forms.RadioButton();
             this.label2 = new System.Windows.Forms.Label();
             this.txtDestino = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -54,9 +58,8 @@ namespace CheckTrips360
             this.dtgVuelos = new System.Windows.Forms.DataGridView();
             this.vivaBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.btnExportarExcel = new System.Windows.Forms.Button();
-            this.txtMaxResults = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgVuelos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vivaBindingSource)).BeginInit();
@@ -70,6 +73,7 @@ namespace CheckTrips360
             this.button1.TabIndex = 0;
             this.button1.Text = "Cotizar Viaje Sencillo";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             // 
             // btnClose
             // 
@@ -79,6 +83,7 @@ namespace CheckTrips360
             this.btnClose.TabIndex = 1;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Visible = false;
             // 
             // btnStartConnection
             // 
@@ -88,6 +93,7 @@ namespace CheckTrips360
             this.btnStartConnection.TabIndex = 2;
             this.btnStartConnection.Text = "Conectar Browser";
             this.btnStartConnection.UseVisualStyleBackColor = true;
+            this.btnStartConnection.Visible = false;
             // 
             // btnConnectDb
             // 
@@ -97,9 +103,12 @@ namespace CheckTrips360
             this.btnConnectDb.TabIndex = 3;
             this.btnConnectDb.Text = "Test DB Connection";
             this.btnConnectDb.UseVisualStyleBackColor = true;
+            this.btnConnectDb.Visible = false;
             // 
             // panel1
             // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.txtMaxResults);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.txtEmision);
@@ -108,16 +117,66 @@ namespace CheckTrips360
             this.panel1.Controls.Add(this.btnBuscar);
             this.panel1.Controls.Add(this.dtpFechaFin);
             this.panel1.Controls.Add(this.dtpFechaInicio);
-            this.panel1.Controls.Add(this.rdbSencillo);
-            this.panel1.Controls.Add(this.rdbRedondo);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.txtDestino);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.txtOrigen);
             this.panel1.Location = new System.Drawing.Point(19, 124);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(702, 184);
+            this.panel1.Size = new System.Drawing.Size(702, 208);
             this.panel1.TabIndex = 4;
+            // 
+            // panel3
+            // 
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.rdbRedondo);
+            this.panel3.Controls.Add(this.rdbSencillo);
+            this.panel3.Location = new System.Drawing.Point(440, 33);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(226, 45);
+            this.panel3.TabIndex = 8;
+            // 
+            // rdbRedondo
+            // 
+            this.rdbRedondo.AutoSize = true;
+            this.rdbRedondo.Location = new System.Drawing.Point(116, 9);
+            this.rdbRedondo.Name = "rdbRedondo";
+            this.rdbRedondo.Size = new System.Drawing.Size(94, 25);
+            this.rdbRedondo.TabIndex = 4;
+            this.rdbRedondo.Text = "Redondo";
+            this.rdbRedondo.UseVisualStyleBackColor = true;
+            this.rdbRedondo.CheckedChanged += new System.EventHandler(this.rdbRedondo_CheckedChanged_1);
+            // 
+            // rdbSencillo
+            // 
+            this.rdbSencillo.AutoSize = true;
+            this.rdbSencillo.Checked = true;
+            this.rdbSencillo.Location = new System.Drawing.Point(17, 9);
+            this.rdbSencillo.Name = "rdbSencillo";
+            this.rdbSencillo.Size = new System.Drawing.Size(85, 25);
+            this.rdbSencillo.TabIndex = 5;
+            this.rdbSencillo.TabStop = true;
+            this.rdbSencillo.Text = "Sencillo";
+            this.rdbSencillo.UseVisualStyleBackColor = true;
+            this.rdbSencillo.CheckedChanged += new System.EventHandler(this.rdbSencillo_CheckedChanged_1);
+            // 
+            // txtMaxResults
+            // 
+            this.txtMaxResults.Location = new System.Drawing.Point(230, 149);
+            this.txtMaxResults.Name = "txtMaxResults";
+            this.txtMaxResults.Size = new System.Drawing.Size(168, 29);
+            this.txtMaxResults.TabIndex = 13;
+            this.txtMaxResults.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMaxResults_KeyPress);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label4.Location = new System.Drawing.Point(230, 125);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(101, 21);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "Max Results";
             // 
             // txtEmision
             // 
@@ -140,7 +199,7 @@ namespace CheckTrips360
             // chkConexiones
             // 
             this.chkConexiones.AutoSize = true;
-            this.chkConexiones.Location = new System.Drawing.Point(451, 88);
+            this.chkConexiones.Location = new System.Drawing.Point(464, 88);
             this.chkConexiones.Name = "chkConexiones";
             this.chkConexiones.Size = new System.Drawing.Size(159, 25);
             this.chkConexiones.TabIndex = 9;
@@ -149,9 +208,11 @@ namespace CheckTrips360
             // 
             // btnBuscar
             // 
-            this.btnBuscar.Location = new System.Drawing.Point(429, 120);
+            this.btnBuscar.Image = global::CheckTrips360.Properties.Resources.search;
+            this.btnBuscar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnBuscar.Location = new System.Drawing.Point(429, 124);
             this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(248, 58);
+            this.btnBuscar.Size = new System.Drawing.Size(248, 73);
             this.btnBuscar.TabIndex = 8;
             this.btnBuscar.Text = "Buscar";
             this.btnBuscar.UseVisualStyleBackColor = true;
@@ -160,6 +221,7 @@ namespace CheckTrips360
             // dtpFechaFin
             // 
             this.dtpFechaFin.CustomFormat = "dd/MM/yyyy";
+            this.dtpFechaFin.Enabled = false;
             this.dtpFechaFin.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpFechaFin.Location = new System.Drawing.Point(230, 86);
             this.dtpFechaFin.Name = "dtpFechaFin";
@@ -174,28 +236,6 @@ namespace CheckTrips360
             this.dtpFechaInicio.Name = "dtpFechaInicio";
             this.dtpFechaInicio.Size = new System.Drawing.Size(168, 29);
             this.dtpFechaInicio.TabIndex = 6;
-            // 
-            // rdbSencillo
-            // 
-            this.rdbSencillo.AutoSize = true;
-            this.rdbSencillo.Checked = true;
-            this.rdbSencillo.Location = new System.Drawing.Point(451, 41);
-            this.rdbSencillo.Name = "rdbSencillo";
-            this.rdbSencillo.Size = new System.Drawing.Size(85, 25);
-            this.rdbSencillo.TabIndex = 5;
-            this.rdbSencillo.TabStop = true;
-            this.rdbSencillo.Text = "Sencillo";
-            this.rdbSencillo.UseVisualStyleBackColor = true;
-            // 
-            // rdbRedondo
-            // 
-            this.rdbRedondo.AutoSize = true;
-            this.rdbRedondo.Location = new System.Drawing.Point(550, 41);
-            this.rdbRedondo.Name = "rdbRedondo";
-            this.rdbRedondo.Size = new System.Drawing.Size(94, 25);
-            this.rdbRedondo.TabIndex = 4;
-            this.rdbRedondo.Text = "Redondo";
-            this.rdbRedondo.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
@@ -235,6 +275,7 @@ namespace CheckTrips360
             // 
             // panel2
             // 
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.btnAeromexico);
             this.panel2.Controls.Add(this.btnViva);
             this.panel2.Location = new System.Drawing.Point(19, 23);
@@ -244,6 +285,7 @@ namespace CheckTrips360
             // 
             // btnAeromexico
             // 
+            this.btnAeromexico.Enabled = false;
             this.btnAeromexico.Image = global::CheckTrips360.Properties.Resources.aeromexico;
             this.btnAeromexico.Location = new System.Drawing.Point(255, 9);
             this.btnAeromexico.Name = "btnAeromexico";
@@ -253,6 +295,7 @@ namespace CheckTrips360
             // 
             // btnViva
             // 
+            this.btnViva.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnViva.Image = global::CheckTrips360.Properties.Resources.viva;
             this.btnViva.Location = new System.Drawing.Point(16, 9);
             this.btnViva.Name = "btnViva";
@@ -266,11 +309,11 @@ namespace CheckTrips360
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dtgVuelos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtgVuelos.Location = new System.Drawing.Point(23, 327);
+            this.dtgVuelos.Location = new System.Drawing.Point(23, 369);
             this.dtgVuelos.Name = "dtgVuelos";
             this.dtgVuelos.RowHeadersWidth = 53;
             this.dtgVuelos.RowTemplate.Height = 31;
-            this.dtgVuelos.Size = new System.Drawing.Size(967, 377);
+            this.dtgVuelos.Size = new System.Drawing.Size(967, 335);
             this.dtgVuelos.TabIndex = 6;
             // 
             // vivaBindingSource
@@ -288,23 +331,6 @@ namespace CheckTrips360
             this.btnExportarExcel.Visible = false;
             this.btnExportarExcel.Click += new System.EventHandler(this.btnExportarExcel_Click);
             // 
-            // txtMaxResults
-            // 
-            this.txtMaxResults.Location = new System.Drawing.Point(230, 149);
-            this.txtMaxResults.Name = "txtMaxResults";
-            this.txtMaxResults.Size = new System.Drawing.Size(168, 29);
-            this.txtMaxResults.TabIndex = 13;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label4.Location = new System.Drawing.Point(230, 125);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(101, 21);
-            this.label4.TabIndex = 12;
-            this.label4.Text = "Max Results";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
@@ -318,10 +344,13 @@ namespace CheckTrips360
             this.Controls.Add(this.btnStartConnection);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.button1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Viajes360Mx - Módulo de Busqueda de Vuelos - v1.1.1";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dtgVuelos)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.vivaBindingSource)).EndInit();
@@ -356,5 +385,6 @@ namespace CheckTrips360
         private Button btnExportarExcel;
         private TextBox txtMaxResults;
         private Label label4;
+        private Panel panel3;
     }
 }

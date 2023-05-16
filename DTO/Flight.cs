@@ -9,6 +9,11 @@ namespace CheckTrips360.DTO
 {
     public  class Flight
     {
+        public Flight()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+        public int Order { get; set; }
         public int Id { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -30,6 +35,9 @@ namespace CheckTrips360.DTO
         public List<FlightPackage> Paquetes { get; set; }
         public string Tipo { get; set; }
         public string NumVuelo { get; set; }
+
+        private DateTime _createdDate = DateTime.Now;
+        public DateTime CreatedDate { get { return _createdDate;  } set { _createdDate = value; } }
         public string Origin
         {
             get
@@ -67,8 +75,8 @@ namespace CheckTrips360.DTO
             get
             {
                 if (Quotation != null)
-                    return Quotation.Emision;
-                return "z";
+                    return this.Quotation.IsRoundTrip ? (Convert.ToDecimal(Quotation.Emision)/2).ToString() : Quotation.Emision;
+                return "0";
             }
             set { if (Quotation != null) Quotation.Emision = value; }
         }

@@ -30,6 +30,8 @@ namespace CheckTrips360
             
             table.Columns.Add("ConexionDetail");
             table.Columns.Add("AlertaAsientoDetalle");
+            table.Columns.Add("CreatedDate");
+
             foreach (T item in data)
             {
                 DataRow row = table.NewRow();

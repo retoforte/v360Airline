@@ -48,18 +48,6 @@ namespace CheckTrips360
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            
-
-        }
-
         private void btnClose_Click(object sender, EventArgs e)
         {
             driver.Quit();
@@ -76,6 +64,7 @@ namespace CheckTrips360
             manageProcess.KillChrome();
             manageProcess.KillChromeDriver();
             manageProcess.LaunchChromeWithDebugging();
+            
             Thread.Sleep(3000);
             options = new ChromeOptions();
 
@@ -95,7 +84,7 @@ namespace CheckTrips360
             bBManager.CountQuotation();
         }
 
-        private List<Flight> IniciatBusqueda()
+        private List<Flight> IniciatBusqueda(string tipo)
         {
             driver.Navigate().GoToUrl("https://www.vivaaerobus.com/");
             driver.Manage().Window.Maximize();
@@ -118,7 +107,7 @@ namespace CheckTrips360
             rdbViajeSencillo.Click();
             divViajeOrigen.Click();
 
-            txtViajeOrigen.SendKeys(txtOrigen.Text);
+            txtViajeOrigen.SendKeys(tipo == "Salida" ? txtOrigen.Text : txtDestino.Text);
             Thread.Sleep(2000);
             // Del dropdown buscar el primer elemento y seleccionarlo
             UIGenericActions.WaitUntilElementIsVisible("//app-station-results", UIGenericActions.searchType.XPATH, driver, null);
@@ -133,7 +122,7 @@ namespace CheckTrips360
                 IWebElement firstStationSavedItem = stationSavedItems.First();
                 firstStationSavedItem.Click();
 
-                txtViajeDestino.SendKeys(txtDestino.Text);
+                txtViajeDestino.SendKeys(tipo == "Salida" ? txtDestino.Text : txtOrigen.Text);
                 // Del dropdown buscar el primer elemento y seleccionarlo
                 // Buscando el Destino
                 Thread.Sleep(500);
@@ -158,28 +147,28 @@ namespace CheckTrips360
 
                 FactoryBusqueda factoryBusqueda = new FactoryBusqueda(Aerolinea.VIVA);
                 browser = factoryBusqueda.GetBuscador();
-                this.mainQuotation = CreatQuotation();
+                this.mainQuotation = CreatQuotation(tipo);
                 browser.Quotation = this.mainQuotation;
                 browser.Driver = driver;
 
-                return browser.BuscarVuelos("Salida");
+                return browser.BuscarVuelos(tipo);
             }
             return new List<Flight>();
         }
 
-        private Quotation CreatQuotation()
+        private Quotation CreatQuotation(string tipo)
         {
             return new Quotation()
             {
-                Origin = txtOrigen.Text,
-                Destination = txtDestino.Text,
+                Origin = tipo == "Salida" ? txtOrigen.Text : txtDestino.Text,
+                Destination = tipo == "Salida" ? txtDestino.Text : txtOrigen.Text,
                 StartDate = dtpFechaInicio.Value,
                 EndDate = dtpFechaFin.Value,
                 IsRoundTrip = rdbRedondo.Checked,
                 IncludeConexions = chkConexiones.Checked,
                 AirlineCatalogId = ((int)Airlines.VIVA),
                 Emision = txtEmision.Text,
-                MaxResults = int.Parse(txtMaxResults.Text)
+                MaxResults = int.Parse(String.IsNullOrWhiteSpace(txtMaxResults.Text) ? "100" : txtMaxResults.Text)
             };
         }
 
@@ -196,13 +185,18 @@ namespace CheckTrips360
         private void btnBuscar_Click(object sender, EventArgs e)
         {
             Conectar();
-            IniciatBusqueda();
+            IniciatBusqueda("Salida");
+            if (rdbRedondo.Checked)
+                IniciatBusqueda("Regreso");
+
         }
 
         private void btnBuscar_Click_1(object sender, EventArgs e)
         {
             Conectar();
-            CargarGrid(IniciatBusqueda());
+            CargarGrid(IniciatBusqueda("Salida"));
+            if (rdbRedondo.Checked)
+                CargarGrid(IniciatBusqueda("Regreso"));
         }
 
         private void CargarGrid(List<Flight> vuelos)
@@ -212,16 +206,23 @@ namespace CheckTrips360
             dtgVuelos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             //dtgVuelos.ReadOnly = true;
 
-             DataGridViewCheckBoxColumn checkColumn = new DataGridViewCheckBoxColumn();
+            /* DataGridViewCheckBoxColumn checkColumn = new DataGridViewCheckBoxColumn();
              checkColumn.Name = "Check";
              checkColumn.HeaderText = "Select";
-             dtgVuelos.Columns.Add(checkColumn);
+             dtgVuelos.Columns.Add(checkColumn);*/
 
             
             if (this.browser.Quotation.AirlineCatalogId == ((int)Airlines.VIVA))
             {
+                DataTable cargaPrevia = (DataTable)dtgVuelos.DataSource;
                 List<VviaFlight> vviaFlights = vuelos.Select(mappingsFlights.MapToVviaFlight).ToList();
-                dtgVuelos.DataSource = vviaFlights.ToDataTableViva();
+                if (cargaPrevia != null)
+                {
+                    cargaPrevia.Merge(vviaFlights.ToDataTableViva());
+                    dtgVuelos.DataSource = cargaPrevia;
+                }
+                else
+                    dtgVuelos.DataSource = vviaFlights.ToDataTableViva();
             }
 
             //dtgVuelos.Columns["StartDate"].DefaultCellStyle.Format = "dd-MM-yyyy HH:mm";
@@ -231,14 +232,16 @@ namespace CheckTrips360
             dtgVuelos.Columns["Emision"].DefaultCellStyle.Format = "C2";
 
             dtgVuelos.Columns["ConexionDetail"].HeaderText = "Conexion";
-            dtgVuelos.Columns["ConexionDetail"].DefaultCellStyle.BackColor = Color.Gray;
+            dtgVuelos.Columns["ConexionDetail"].DefaultCellStyle.Font = new Font("Arial", 09, FontStyle.Bold);
+            dtgVuelos.Columns["ConexionDetail"].DefaultCellStyle.BackColor = Color.Beige;
             dtgVuelos.Columns["AlertaAsientoDetalle"].HeaderText = "Disponibilidad";
-            dtgVuelos.Columns["AlertaAsientoDetalle"].DefaultCellStyle.BackColor = Color.Gainsboro;
+            dtgVuelos.Columns["AlertaAsientoDetalle"].DefaultCellStyle.BackColor = Color.Beige;
             dtgVuelos.Columns["AlertaAsientoDetalle"].DefaultCellStyle.Font = new Font("Arial", 09, FontStyle.Bold);
 
             dtgVuelos.Columns["NumVuelo"].DefaultCellStyle.Font =  new Font("Arial", 09, FontStyle.Bold);
             dtgVuelos.Columns["Horario"].DefaultCellStyle.Font = new Font("Arial", 09, FontStyle.Bold);
 
+            dtgVuelos.Columns["CreatedDate"].Visible = true;
             if (this.browser.Quotation.AirlineCatalogId == ((int)Airlines.VIVA))
             {
                 dtgVuelos.Columns["Ligth"].DefaultCellStyle.Format = "C2";
@@ -246,6 +249,8 @@ namespace CheckTrips360
                 dtgVuelos.Columns["Smart"].DefaultCellStyle.Format = "C2";
             };
             this.vuelosSeleccionados = vuelos;
+            dtgVuelos.Sort(dtgVuelos.Columns["CreatedDate"], ListSortDirection.Ascending);
+
         }
 
         private void btnExportarExcel_Click(object sender, EventArgs e)
@@ -265,5 +270,33 @@ namespace CheckTrips360
             }
         }
 
+        private void rdbRedondo_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if (rdbRedondo.Checked)
+            {
+                dtpFechaFin.Enabled = true;
+                rdbSencillo.Checked = false;
+            }
+        }
+
+        private void rdbSencillo_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if (rdbSencillo.Checked)
+            {
+                dtpFechaFin.Enabled = false;
+                rdbRedondo.Checked = false;
+                dtpFechaFin.ResetText();
+            }
+        }
+
+        private void txtMaxResults_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Check if the key pressed is a number.
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                // Prevent the key from being entered into the textbox.
+                e.Handled = true;
+            }
+        }
     }
 }
