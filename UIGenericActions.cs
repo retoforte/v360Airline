@@ -96,7 +96,7 @@ namespace CheckTrips360
             }
             return false;
         }
-        public static void WaitUntilElementIsVisible(string element, searchType type, IWebDriver driver, IWebElement parent , bool waitForAllWhenMultiple = false)
+        public static IWebElement WaitUntilElementIsVisible(string element, searchType type, IWebDriver driver, IWebElement parent , bool waitForAllWhenMultiple = false, string checkTextToBePresent = "")
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
             By elementLocator = By.Id("");
@@ -115,11 +115,20 @@ namespace CheckTrips360
             else if (parent != null)
                 wait.Until(ExpectedConditions.ElementIsVisible(elementLocator));
 
-
             if (parent != null)
-                wait.Until(ExpectedConditions.ElementToBeClickable(parent.FindElement(elementLocator)));
+            {
+                IWebElement found = wait.Until(ExpectedConditions.ElementToBeClickable(parent.FindElement(elementLocator)));
+                if (checkTextToBePresent != null && checkTextToBePresent.Trim().Length > 0)
+                    wait.Until(ExpectedConditions.TextToBePresentInElement(found, checkTextToBePresent));
+                return found;
+            }
             else
-                wait.Until(ExpectedConditions.ElementToBeClickable(elementLocator));
+            {
+                IWebElement found = wait.Until(ExpectedConditions.ElementToBeClickable(elementLocator));
+                if (checkTextToBePresent != null && checkTextToBePresent.Trim().Length > 0)
+                    wait.Until(ExpectedConditions.TextToBePresentInElement(found, checkTextToBePresent));
+                return found;
+            }
         }
 
     }
