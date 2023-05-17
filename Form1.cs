@@ -19,6 +19,7 @@ using System.Reflection;
 using CheckTrips360.DbClasses;
 using static CheckTrips360.Utils.Enumerados;
 using CheckTrips360.DTO;
+using CheckTrips360.Visa;
 
 namespace CheckTrips360
 {
@@ -43,6 +44,8 @@ namespace CheckTrips360
         IBusquedaBrowser browser;
         private Quotation mainQuotation;
         List<Flight> vuelosSeleccionados;
+
+        VisaViewModel visaViewModel = new VisaViewModel();
         public Form1()
         {
             InitializeComponent();
@@ -63,7 +66,7 @@ namespace CheckTrips360
             ManageProcess manageProcess = new ManageProcess();
             manageProcess.KillChrome();
             manageProcess.KillChromeDriver();
-            manageProcess.LaunchChromeWithDebugging();
+            manageProcess.LaunchChromeWithDebugging("9014");
             
             Thread.Sleep(3000);
             options = new ChromeOptions();
@@ -297,6 +300,42 @@ namespace CheckTrips360
                 // Prevent the key from being entered into the textbox.
                 e.Handled = true;
             }
+        }
+
+        private void btnAgregar_Click(object sender, EventArgs e)
+        {
+            visaViewModel.AddUser(new VisaUser
+            {
+                FullName = txtNombreCompleto.Text,
+                Password = txtPassword.Text,
+                UserName = txtUsuario.Text,
+                AppointmentDate = dtpFecha.Value,
+                CreatedDate = DateTime.Now,
+                Estado = txtEstado.Text
+            });
+
+            dgbValidacionVISA.DataSource = visaViewModel.visaUsers;
+        }
+
+        private void btnInciarChequeo_Click(object sender, EventArgs e)
+        {
+            visaViewModel.AddUser(new VisaUser
+            {
+                FullName = "ADRIAN ALEJANDRO TREVINO MEDINA",
+                Password = "Antonio1977",
+                UserName = "antonio_trevino1@hotmail.com",
+                AppointmentDate = dtpFecha.Value,
+                CreatedDate = DateTime.Now,
+                Estado = "Monterrey"
+            });
+
+            if (visaViewModel.visaUsers.Count() > 0)
+            {
+                visaViewModel.Iniciar();
+                visaViewModel.ProcesarVisas();
+            }
+            else
+                MessageBox.Show("No existen registros para validar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
     }
 }

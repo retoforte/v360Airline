@@ -58,10 +58,14 @@ namespace CheckTrips360.Utils
             return chromeProcesses != null && chromeProcesses.Length > 0;
         }
 
-        public void LaunchChromeWithDebugging()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="port">9014 to Vuelos y 9015 para VISA</param>
+        public void LaunchChromeWithDebugging(string port)
         {
                 string chromeExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
-                string chromeOptions = "--remote-debugging-port=9014 --disable-web-security --disable-web-security --user-data-dir=~/chromeTemp";
+                string chromeOptions = "--remote-debugging-port="+ port + " --disable-web-security --disable-web-security --user-data-dir=~/chromeTemp";
                 //string chromeOptions = "--remote-debugging-port=9014 --disable-web-security --user-data-dir=\"C:\\Users\\kandrade\\AppData\\Local\\Google\\Chrome\\User Data\" --disable-web-security --user-data-dir=~/chromeTemp";
 
                 ProcessStartInfo startInfo = new ProcessStartInfo(chromeExecutablePath, chromeOptions);
