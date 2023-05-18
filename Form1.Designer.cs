@@ -253,7 +253,6 @@ namespace CheckTrips360
             this.txtDestino.Name = "txtDestino";
             this.txtDestino.Size = new System.Drawing.Size(194, 29);
             this.txtDestino.TabIndex = 2;
-            this.txtDestino.Text = "Villahermosa";
             // 
             // label1
             // 
@@ -271,7 +270,7 @@ namespace CheckTrips360
             this.txtOrigen.Name = "txtOrigen";
             this.txtOrigen.Size = new System.Drawing.Size(198, 29);
             this.txtOrigen.TabIndex = 0;
-            this.txtOrigen.Text = "Guadalajara";
+            this.txtOrigen.Text = "VSA";
             // 
             // panel2
             // 
@@ -346,7 +345,7 @@ namespace CheckTrips360
             this.Controls.Add(this.button1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Viajes360Mx - Módulo de Busqueda de Vuelos - v1.1.1";
+            this.Text = "Viajes360Mx - Módulo de Busqueda de Vuelos - v1.1.1.2";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel3.ResumeLayout(false);

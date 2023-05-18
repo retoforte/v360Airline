@@ -54,6 +54,8 @@ namespace CheckTrips360
 
                         button.Click();
                     }
+                    if (isSelecteDate)
+                        break;
                     index++;
                 }
             }

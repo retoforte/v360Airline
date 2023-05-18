@@ -90,12 +90,7 @@ namespace CheckTrips360
             driver.Manage().Window.Maximize();
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30)); // Maximum wait time of 10 seconds
             Thread.Sleep(2000);
-            By elementLocator = By.XPath("//app-booker-search//app-flight-select//label[@for='type_1']//span[1]");
-            wait.Until(driver =>
-            {
-                IWebElement element = driver.FindElement(elementLocator);
-                return element.Displayed;
-            });
+            UIGenericActions.WaitUntilElementIsVisible("//app-booker-search//app-flight-select//label[@for='type_1']//span[1]", UIGenericActions.searchType.XPATH, driver, null, false);
 
             IWebElement rdbViajeSencillo = driver.FindElement(By.XPath(PageElements.RdbViajeSencillo));
             IWebElement txtViajeOrigen = driver.FindElement(By.XPath(PageElements.TxtViajeOrigen));
@@ -140,7 +135,7 @@ namespace CheckTrips360
                     firstStationSavedItem.Click();
                 }
                 Thread.Sleep(2000);
-                UIGenericActions.SelectFechaSalida(driver, DateTime.Now.AddDays(80));
+                UIGenericActions.SelectFechaSalida(driver, dtpFechaInicio.Value);
                 IWebElement btnBuscar = driver.FindElement(By.CssSelector("button.viva-btn.action"));
                 btnBuscar.Click();
 
