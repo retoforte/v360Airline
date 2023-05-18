@@ -348,7 +348,7 @@ namespace CheckTrips360
             this.Controls.Add(this.button1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Viajes360Mx - Módulo de Busqueda de Vuelos - v1.1.1.2";
+            this.Text = "Viajes360Mx - Módulo de Busqueda de Vuelos - v1.1.3";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel3.ResumeLayout(false);
