@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CheckTrips360
@@ -31,7 +33,7 @@ namespace CheckTrips360
             table.Columns.Add("ConexionDetail");
             table.Columns.Add("AlertaAsientoDetalle");
             table.Columns.Add("CreatedDate");
-
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US", false);
             foreach (T item in data)
             {
                 DataRow row = table.NewRow();
@@ -42,7 +44,7 @@ namespace CheckTrips360
                         row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
                         if (prop.Name == "TUA" || prop.Name == "Ligth" || prop.Name == "Extra" || prop.Name == "Smart" || prop.Name == "BasePrice" || prop.Name == "Emision")
                         {
-                            row[prop.Name] = "$" + string.Format("{0:C}", row[prop.Name]);
+                            row[prop.Name] = string.Format(CultureInfo.CurrentCulture, "{0:c}", row[prop.Name] != null ? Convert.ToDouble(row[prop.Name]) : 0);
                         }
                     }
                 }

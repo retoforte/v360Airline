@@ -19,6 +19,7 @@ using System.Reflection;
 using CheckTrips360.DbClasses;
 using static CheckTrips360.Utils.Enumerados;
 using CheckTrips360.DTO;
+using System.Globalization;
 
 namespace CheckTrips360
 {
@@ -142,7 +143,7 @@ namespace CheckTrips360
                     firstStationSavedItem.Click();
                 }
                 Thread.Sleep(2000);
-                UIGenericActions.SelectFechaSalida(driver, dtpFechaInicio.Value);
+                UIGenericActions.SelectFechaSalida(driver, tipo == "Salida" ? dtpFechaInicio.Value : dtpFechaFin.Value);
                 IWebElement btnBuscar = driver.FindElement(By.CssSelector("button.viva-btn.action"));
                 btnBuscar.Click();
 
@@ -248,8 +249,13 @@ namespace CheckTrips360
 
             //dtgVuelos.Columns["StartDate"].DefaultCellStyle.Format = "dd-MM-yyyy HH:mm";
             //dtgVuelos.Columns["EndDate"].DefaultCellStyle.Format = "dd-MM-yyyy HH:mm";
-            dtgVuelos.Columns["BasePrice"].DefaultCellStyle.Format = "C2";
-            dtgVuelos.Columns["TUA"].DefaultCellStyle.Format = "C2";
+            DataGridViewCellStyle cellStyle = new DataGridViewCellStyle();
+            cellStyle.Format = "c";
+            cellStyle.FormatProvider = CultureInfo.CurrentCulture;
+            dtgVuelos.Columns["BasePrice"].DefaultCellStyle = cellStyle;
+            dtgVuelos.Columns["BasePrice"].DefaultCellStyle.Format = "c";
+            dtgVuelos.Columns["TUA"].DefaultCellStyle.Format = "N2";
+            dtgVuelos.Columns["TUA"].DefaultCellStyle.FormatProvider = CultureInfo.CurrentCulture;
             dtgVuelos.Columns["Emision"].DefaultCellStyle.Format = "C2";
 
             dtgVuelos.Columns["ConexionDetail"].HeaderText = "Conexion";
