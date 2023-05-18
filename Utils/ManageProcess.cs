@@ -4,6 +4,7 @@ using OpenQA.Selenium.Remote;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,12 +61,15 @@ namespace CheckTrips360.Utils
 
         public void LaunchChromeWithDebugging()
         {
-                string chromeExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
-                string chromeOptions = "--remote-debugging-port=9014 --disable-web-security --disable-web-security --user-data-dir=~/chromeTemp";
-                //string chromeOptions = "--remote-debugging-port=9014 --disable-web-security --user-data-dir=\"C:\\Users\\kandrade\\AppData\\Local\\Google\\Chrome\\User Data\" --disable-web-security --user-data-dir=~/chromeTemp";
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string chromeProfilePath = Path.Combine(appDataPath, "Google\\Chrome\\User\\Default");
+            string chromeExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+            
+            string chromeOptions = "--remote-debugging-port=9014 --disable-web-security --disable-web-security --user-data-dir="+ chromeProfilePath;
+            //string chromeOptions = "--remote-debugging-port=9014 --disable-web-security --user-data-dir=\"C:\\Users\\kandrade\\AppData\\Local\\Google\\Chrome\\User Data\" --disable-web-security --user-data-dir=~/chromeTemp";
 
-                ProcessStartInfo startInfo = new ProcessStartInfo(chromeExecutablePath, chromeOptions);
-                Process.Start(startInfo);
+            ProcessStartInfo startInfo = new ProcessStartInfo(chromeExecutablePath, chromeOptions);
+            Process.Start(startInfo);
         }
     }
 }

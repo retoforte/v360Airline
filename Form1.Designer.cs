@@ -216,7 +216,7 @@ namespace CheckTrips360
             this.btnBuscar.TabIndex = 8;
             this.btnBuscar.Text = "Buscar";
             this.btnBuscar.UseVisualStyleBackColor = true;
-            this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click_1);
+            this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
             // 
             // dtpFechaFin
             // 
@@ -253,6 +253,7 @@ namespace CheckTrips360
             this.txtDestino.Name = "txtDestino";
             this.txtDestino.Size = new System.Drawing.Size(194, 29);
             this.txtDestino.TabIndex = 2;
+            this.txtDestino.TextChanged += new System.EventHandler(this.txtDestino_TextChanged);
             // 
             // label1
             // 
@@ -271,6 +272,7 @@ namespace CheckTrips360
             this.txtOrigen.Size = new System.Drawing.Size(198, 29);
             this.txtOrigen.TabIndex = 0;
             this.txtOrigen.Text = "VSA";
+            this.txtOrigen.TextChanged += new System.EventHandler(this.txtOrigen_TextChanged);
             // 
             // panel2
             // 
@@ -307,12 +309,13 @@ namespace CheckTrips360
             this.dtgVuelos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtgVuelos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dtgVuelos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtgVuelos.Location = new System.Drawing.Point(23, 369);
             this.dtgVuelos.Name = "dtgVuelos";
             this.dtgVuelos.RowHeadersWidth = 53;
             this.dtgVuelos.RowTemplate.Height = 31;
-            this.dtgVuelos.Size = new System.Drawing.Size(967, 335);
+            this.dtgVuelos.Size = new System.Drawing.Size(1036, 335);
             this.dtgVuelos.TabIndex = 6;
             // 
             // vivaBindingSource

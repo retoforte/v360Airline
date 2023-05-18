@@ -90,6 +90,13 @@ namespace CheckTrips360
             driver.Manage().Window.Maximize();
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30)); // Maximum wait time of 10 seconds
             Thread.Sleep(2000);
+            try
+            {
+                IReadOnlyCollection<IWebElement> btnCookies = driver.FindElements(By.CssSelector(".viva-btn.quick-add"));
+                if (btnCookies.Count() > 0)
+                    btnCookies.ElementAt(0).Click();
+            } catch(Exception ex) { }
+
             UIGenericActions.WaitUntilElementIsVisible("//app-booker-search//app-flight-select//label[@for='type_1']//span[1]", UIGenericActions.searchType.XPATH, driver, null, false);
 
             IWebElement rdbViajeSencillo = driver.FindElement(By.XPath(PageElements.RdbViajeSencillo));
@@ -179,26 +186,45 @@ namespace CheckTrips360
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            Conectar();
-            IniciatBusqueda("Salida");
-            if (rdbRedondo.Checked)
-                IniciatBusqueda("Regreso");
+            if (Validar())
+            {
+                Conectar();
+                CargarGrid(IniciatBusqueda("Salida"));
+                if (rdbRedondo.Checked)
+                    CargarGrid(IniciatBusqueda("Regreso"));
+            }
 
         }
-
+        private bool Validar()
+        {
+            bool error = true;
+            if (txtOrigen.Text.Trim() == "")
+            {
+                MessageBox.Show("Proporcione la Ciudad Origen", "Advertencia", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                error = false;
+            }
+            else if (txtDestino.Text.Trim() == "")
+            {
+                MessageBox.Show("Proporcione la Ciudad Destino", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                error = false;
+            }
+            else if (rdbRedondo.Checked && dtpFechaFin.Value <= dtpFechaInicio.Value)
+            {
+                MessageBox.Show("La Fecha Fin debe ser mayor a la Fecha Inicio", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                error = false;
+            }
+            return error;
+        }
         private void btnBuscar_Click_1(object sender, EventArgs e)
         {
-            Conectar();
-            CargarGrid(IniciatBusqueda("Salida"));
-            if (rdbRedondo.Checked)
-                CargarGrid(IniciatBusqueda("Regreso"));
+
         }
 
         private void CargarGrid(List<Flight> vuelos)
         {
             dtgVuelos.AutoGenerateColumns = true;
             dtgVuelos.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dtgVuelos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            dtgVuelos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             //dtgVuelos.ReadOnly = true;
 
             /* DataGridViewCheckBoxColumn checkColumn = new DataGridViewCheckBoxColumn();
@@ -292,6 +318,20 @@ namespace CheckTrips360
                 // Prevent the key from being entered into the textbox.
                 e.Handled = true;
             }
+        }
+
+        private void txtOrigen_TextChanged(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            textBox.Text = textBox.Text.ToUpper();
+            textBox.Select(textBox.Text.Length, 0);
+        }
+
+        private void txtDestino_TextChanged(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            textBox.Text = textBox.Text.ToUpper();
+            textBox.Select(textBox.Text.Length, 0);
         }
     }
 }
