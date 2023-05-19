@@ -29,6 +29,74 @@ namespace CheckTrips360.Buscadores
 
         public List<Flight> Flights { get { return this._flights.ToList();  } set { this._flights = new ConcurrentBag<Flight>(value);  } }
 
+        public void IniciarProceso(IWebDriver driver, string tipo, string origen, string destino, DateTime fechaInicio, DateTime fechaFin)
+        {
+            driver.Navigate().GoToUrl("https://www.vivaaerobus.com/");
+            driver.Manage().Window.Maximize();
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30)); // Maximum wait time of 10 seconds
+            Thread.Sleep(2000);
+            try
+            {
+                IReadOnlyCollection<IWebElement> btnCookies = driver.FindElements(By.CssSelector(".viva-btn.quick-add"));
+                if (btnCookies.Count() > 0)
+                    btnCookies.ElementAt(0).Click();
+            }
+            catch (Exception ex) { }
+
+            UIGenericActions.WaitUntilElementIsVisible("//app-booker-search//app-flight-select//label[@for='type_1']//span[1]", UIGenericActions.searchType.XPATH, driver, null, false);
+
+            IWebElement rdbViajeSencillo = driver.FindElement(By.XPath(PageElements.RdbViajeSencillo));
+            IWebElement txtViajeOrigen = driver.FindElement(By.XPath(PageElements.TxtViajeOrigen));
+            IWebElement txtViajeDestino = driver.FindElement(By.XPath(PageElements.TxtViajeDestino));
+            IWebElement divViajeOrigen = driver.FindElement(By.XPath(PageElements.DivActivaCamposViaje));
+
+            IWebElement divResultadoOrigen = null;
+
+            rdbViajeSencillo.Click();
+            divViajeOrigen.Click();
+
+            txtViajeOrigen.SendKeys(tipo == "Salida" ? origen : destino);
+            Thread.Sleep(2000);
+            // Del dropdown buscar el primer elemento y seleccionarlo
+            UIGenericActions.WaitUntilElementIsVisible("//app-station-results", UIGenericActions.searchType.XPATH, driver, null);
+            //divResultadoOrigen = driver.FindElements(By.XPath("//app-station-item//div[contains(@class, 'main-container')]"));
+            IReadOnlyCollection<IWebElement> stationSavedItems = driver.FindElements(By.XPath("//app-station-item//div[contains(@class, 'main-container')]"));
+
+            if (stationSavedItems.Count == 0)
+            {
+                driver.Quit();
+                throw new UIValidationMessageException("La Ciudad Origen Proporcionada no fue encontrada!");
+            }
+            else
+            {
+                // Seleccionar el viaje Origen
+                IWebElement firstStationSavedItem = stationSavedItems.First();
+                firstStationSavedItem.Click();
+
+                txtViajeDestino.SendKeys(tipo == "Salida" ? destino : origen);
+                // Del dropdown buscar el primer elemento y seleccionarlo
+                // Buscando el Destino
+                Thread.Sleep(500);
+                stationSavedItems = driver.FindElements(By.XPath("//app-station-destination-item//div[contains(@class, 'main-container')]"));
+
+                if (stationSavedItems.Count == 0)
+                {
+                    driver.Quit();
+                    throw new UIValidationMessageException("La Ciudad Destino Proporcionada no fue encontrada!");
+                }
+                else
+                {
+                    // Seleccionar el viaje Origen
+                    firstStationSavedItem = stationSavedItems.First();
+                    firstStationSavedItem.Click();
+                }
+                Thread.Sleep(2000);
+                UIGenericActions.SelectFechaSalida(driver, tipo == "Salida" ? fechaInicio : fechaFin);
+                IWebElement btnBuscar = driver.FindElement(By.CssSelector("button.viva-btn.action"));
+                btnBuscar.Click();
+            }
+        }
+
         public List<Flight> BuscarVuelos(string tipo)
         {
             CargarVuelosSalida(tipo);

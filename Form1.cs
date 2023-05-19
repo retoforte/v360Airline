@@ -20,6 +20,7 @@ using CheckTrips360.DbClasses;
 using static CheckTrips360.Utils.Enumerados;
 using CheckTrips360.DTO;
 using System.Globalization;
+using CheckTrips360.Exceptions;
 
 namespace CheckTrips360
 {
@@ -30,14 +31,10 @@ namespace CheckTrips360
         XPATH
     }
 
-    public enum Airlines
-    {
-        VIVA = 1,
-        AEROMEXICO = 2
-    }
-
     public partial class Form1 : Form
     {
+        private Aerolinea selectedAerolinea;
+
         MappingsFlights mappingsFlights = new MappingsFlights();
         IWebDriver driver = null;
         ChromeOptions options = new ChromeOptions();
@@ -87,74 +84,23 @@ namespace CheckTrips360
 
         private List<Flight> IniciatBusqueda(string tipo)
         {
-            driver.Navigate().GoToUrl("https://www.vivaaerobus.com/");
-            driver.Manage().Window.Maximize();
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30)); // Maximum wait time of 10 seconds
-            Thread.Sleep(2000);
             try
             {
-                IReadOnlyCollection<IWebElement> btnCookies = driver.FindElements(By.CssSelector(".viva-btn.quick-add"));
-                if (btnCookies.Count() > 0)
-                    btnCookies.ElementAt(0).Click();
-            } catch(Exception ex) { }
-
-            UIGenericActions.WaitUntilElementIsVisible("//app-booker-search//app-flight-select//label[@for='type_1']//span[1]", UIGenericActions.searchType.XPATH, driver, null, false);
-
-            IWebElement rdbViajeSencillo = driver.FindElement(By.XPath(PageElements.RdbViajeSencillo));
-            IWebElement txtViajeOrigen = driver.FindElement(By.XPath(PageElements.TxtViajeOrigen));
-            IWebElement txtViajeDestino = driver.FindElement(By.XPath(PageElements.TxtViajeDestino));
-            IWebElement divViajeOrigen = driver.FindElement(By.XPath(PageElements.DivActivaCamposViaje));
-
-            IWebElement divResultadoOrigen = null;
-
-            rdbViajeSencillo.Click();
-            divViajeOrigen.Click();
-
-            txtViajeOrigen.SendKeys(tipo == "Salida" ? txtOrigen.Text : txtDestino.Text);
-            Thread.Sleep(2000);
-            // Del dropdown buscar el primer elemento y seleccionarlo
-            UIGenericActions.WaitUntilElementIsVisible("//app-station-results", UIGenericActions.searchType.XPATH, driver, null);
-            //divResultadoOrigen = driver.FindElements(By.XPath("//app-station-item//div[contains(@class, 'main-container')]"));
-            IReadOnlyCollection<IWebElement> stationSavedItems = driver.FindElements(By.XPath("//app-station-item//div[contains(@class, 'main-container')]"));
-
-            if (stationSavedItems.Count == 0)
-                MessageBox.Show("La Ciudad Origen Proporcionada no fue encontrada!", "Advertencia", MessageBoxButtons.OK);
-            else
-            {
-                // Seleccionar el viaje Origen
-                IWebElement firstStationSavedItem = stationSavedItems.First();
-                firstStationSavedItem.Click();
-
-                txtViajeDestino.SendKeys(tipo == "Salida" ? txtDestino.Text : txtOrigen.Text);
-                // Del dropdown buscar el primer elemento y seleccionarlo
-                // Buscando el Destino
-                Thread.Sleep(500);
-                stationSavedItems = driver.FindElements(By.XPath("//app-station-destination-item//div[contains(@class, 'main-container')]"));
-
-                if (stationSavedItems.Count == 0)
-                {
-                    MessageBox.Show("La Ciudad Destino Proporcionada no fue encontrada!", "Advertencia", MessageBoxButtons.OK);
-                    driver.Quit();
-                }
-                else
-                {
-                    // Seleccionar el viaje Origen
-                    firstStationSavedItem = stationSavedItems.First();
-                    firstStationSavedItem.Click();
-                }
-                Thread.Sleep(2000);
-                UIGenericActions.SelectFechaSalida(driver, tipo == "Salida" ? dtpFechaInicio.Value : dtpFechaFin.Value);
-                IWebElement btnBuscar = driver.FindElement(By.CssSelector("button.viva-btn.action"));
-                btnBuscar.Click();
-
-
-                FactoryBusqueda factoryBusqueda = new FactoryBusqueda(Aerolinea.VIVA);
+                FactoryBusqueda factoryBusqueda = new FactoryBusqueda(this.selectedAerolinea);
                 browser = factoryBusqueda.GetBuscador();
                 this.mainQuotation = CreatQuotation(tipo);
                 browser.Quotation = this.mainQuotation;
                 browser.Driver = driver;
-
+                browser.IniciarProceso(driver, tipo, txtOrigen.Text, txtDestino.Text, dtpFechaInicio.Value, dtpFechaFin.Value);
                 return browser.BuscarVuelos(tipo);
+            }
+            catch (UIValidationMessageException uiEx)
+            {
+                MessageBox.Show(uiEx.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return new List<Flight>();
         }
@@ -169,7 +115,7 @@ namespace CheckTrips360
                 EndDate = dtpFechaFin.Value,
                 IsRoundTrip = rdbRedondo.Checked,
                 IncludeConexions = chkConexiones.Checked,
-                AirlineCatalogId = ((int)Airlines.VIVA),
+                AirlineCatalogId = ((int)Aerolinea.VIVA),
                 Emision = txtEmision.Text,
                 MaxResults = int.Parse(String.IsNullOrWhiteSpace(txtMaxResults.Text) ? "100" : txtMaxResults.Text)
             };
@@ -227,14 +173,8 @@ namespace CheckTrips360
             dtgVuelos.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dtgVuelos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             //dtgVuelos.ReadOnly = true;
-
-            /* DataGridViewCheckBoxColumn checkColumn = new DataGridViewCheckBoxColumn();
-             checkColumn.Name = "Check";
-             checkColumn.HeaderText = "Select";
-             dtgVuelos.Columns.Add(checkColumn);*/
-
             
-            if (this.browser.Quotation.AirlineCatalogId == ((int)Airlines.VIVA))
+            if (this.browser.Quotation.AirlineCatalogId == ((int)Aerolinea.VIVA))
             {
                 DataTable cargaPrevia = (DataTable)dtgVuelos.DataSource;
                 List<VviaFlight> vviaFlights = vuelos.Select(mappingsFlights.MapToVviaFlight).ToList();
@@ -269,7 +209,7 @@ namespace CheckTrips360
             dtgVuelos.Columns["Horario"].DefaultCellStyle.Font = new Font("Arial", 09, FontStyle.Bold);
 
             dtgVuelos.Columns["CreatedDate"].Visible = true;
-            if (this.browser.Quotation.AirlineCatalogId == ((int)Airlines.VIVA))
+            if (this.browser.Quotation.AirlineCatalogId == ((int)Aerolinea.VIVA))
             {
                 dtgVuelos.Columns["Ligth"].DefaultCellStyle.Format = "C2";
                 dtgVuelos.Columns["Extra"].DefaultCellStyle.Format = "C2";
@@ -285,7 +225,7 @@ namespace CheckTrips360
             ExcelTransfer excelTransfer = new ExcelTransfer();
             if (this.mainQuotation != null)
             {
-                if (this.browser.Quotation.AirlineCatalogId == ((int)Airlines.VIVA))
+                if (this.browser.Quotation.AirlineCatalogId == ((int)Aerolinea.VIVA))
                 {
                     List<VviaFlight> vviaFlights = this.vuelosSeleccionados.Select(mappingsFlights.MapToVviaFlight).ToList();
                     excelTransfer.StartProcesingSpreadSheet("", vviaFlights);
@@ -338,6 +278,20 @@ namespace CheckTrips360
             TextBox textBox = (TextBox)sender;
             textBox.Text = textBox.Text.ToUpper();
             textBox.Select(textBox.Text.Length, 0);
+        }
+
+        private void btnAeromexico_Click(object sender, EventArgs e)
+        {
+            btnViva.FlatAppearance.BorderSize = 0;
+            btnAeromexico.FlatAppearance.BorderSize = 5;
+            this.selectedAerolinea = Aerolinea.AEROMEXICO;
+        }
+
+        private void btnViva_Click(object sender, EventArgs e)
+        {
+            btnViva.FlatAppearance.BorderSize = 5;
+            btnAeromexico.FlatAppearance.BorderSize = 0;
+            this.selectedAerolinea = Aerolinea.VIVA;
         }
     }
 }

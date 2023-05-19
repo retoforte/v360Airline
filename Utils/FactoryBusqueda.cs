@@ -18,6 +18,8 @@ namespace CheckTrips360.Utils
         {
             if (this._aerolinea == Aerolinea.VIVA)
                 return new Viva();
+            else if (this._aerolinea == Aerolinea.AEROMEXICO)
+                return new AeroMexico();
 
             return null;
         }

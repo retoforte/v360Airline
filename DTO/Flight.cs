@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static CheckTrips360.Utils.Enumerados;
 
 namespace CheckTrips360.DTO
 {
@@ -64,7 +65,7 @@ namespace CheckTrips360.DTO
             get
             {
                 if (Quotation !=null && Quotation.AirlineCatalogId > 0)
-                    return (Airlines.VIVA.ToString().ToUpper());
+                    return (Aerolinea.VIVA.ToString().ToUpper());
                 return "y";
             }
             set { if (Quotation != null) Quotation.AirlineCatalogId = 1;  }

@@ -16,6 +16,7 @@ namespace CheckTrips360.Utils
   
         List<Flight> BuscarVuelos(string tipo);
 
+        void IniciarProceso(IWebDriver driver, string tipo, string origen, string destino, DateTime fechaInicio, DateTime fechaFin);
         void CargarVuelosSalida(string tipo);
         void BuscarHorarios(Flight flight, IWebElement element);
 
