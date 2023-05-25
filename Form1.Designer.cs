@@ -287,7 +287,6 @@ namespace CheckTrips360
             // btnAeromexico
             // 
             this.btnAeromexico.BackColor = System.Drawing.SystemColors.Control;
-            this.btnAeromexico.Enabled = false;
             this.btnAeromexico.FlatAppearance.BorderColor = System.Drawing.Color.Green;
             this.btnAeromexico.FlatAppearance.BorderSize = 0;
             this.btnAeromexico.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -301,15 +300,16 @@ namespace CheckTrips360
             // 
             // btnViva
             // 
+            this.btnViva.BackColor = System.Drawing.Color.White;
             this.btnViva.FlatAppearance.BorderColor = System.Drawing.Color.Green;
             this.btnViva.FlatAppearance.BorderSize = 5;
             this.btnViva.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnViva.Image = global::CheckTrips360.Properties.Resources.viva;
             this.btnViva.Location = new System.Drawing.Point(16, 9);
             this.btnViva.Name = "btnViva";
-            this.btnViva.Size = new System.Drawing.Size(213, 57);
+            this.btnViva.Size = new System.Drawing.Size(207, 57);
             this.btnViva.TabIndex = 0;
-            this.btnViva.UseVisualStyleBackColor = true;
+            this.btnViva.UseVisualStyleBackColor = false;
             this.btnViva.Click += new System.EventHandler(this.btnViva_Click);
             // 
             // dtgVuelos

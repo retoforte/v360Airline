@@ -24,6 +24,46 @@ namespace CheckTrips360
             CSSLOCATOR
         }
 
+        public static bool SelecFechaSalidaAeroMexico(IWebDriver driver, DateTime fecha)
+        {
+            var wait = new WebDriverWait(driver, new TimeSpan(0, 0, 30));
+            IWebElement fullCalendario = driver.FindElement(By.CssSelector("div.BookerCalendarPicker.calendarNewHome"));
+            fullCalendario.Click();
+            Thread.Sleep(500);
+            //UIGenericActions.WaitUntilElementIsVisible("div.DatePickerCalendarMonthRefactored", UIGenericActions.searchType.CSSLOCATOR, null, fullCalendario, true);
+            bool isSelecteDate = false;
+            do
+            {
+                // Izquiero y Derecho /  Mes actual / Mes siguiente
+                IReadOnlyCollection<IWebElement> calendarios = driver.FindElements(By.ClassName("DatePickerCalendarMonthRefactored"));
+                int index = 1;
+                foreach (IWebElement calendario in calendarios)
+                {
+                    if (ValidateCalendarioFechasVsRequeridaAeroMexico(driver, fecha, calendario))
+                    {
+                        isSelecteDate = true;
+                    }
+                    else if (index == 2)
+                    {
+                        IWebElement txtCalOrigen = driver.FindElement(By.TagName("app-booker-calendar"));
+                        IWebElement button = calendario.FindElement(By.XPath("//bs-days-calendar-view[2]//button[@class='next']"));
+                        /*((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].removeAttribute('disabled');", button);
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].style.visibility = 'visible'; arguments[0].style.display = 'block';", button);
+                        */
+                        //Move the Calendar
+                        IWebElement button2 = calendario.FindElement(By.XPath("//button[@class='next']"));
+
+                        button.Click();
+                    }
+                    if (isSelecteDate)
+                        break;
+                    index++;
+                }
+            }
+            while (isSelecteDate == false);
+            return isSelecteDate;
+            return true;
+        }
         public static bool SelectFechaSalida(IWebDriver driver, DateTime fecha) {
             //WaitUntilElementIsVisible("//bs-days-calendar-view[2]//button[@class='next']", searchType.XPATH, driver);
             
@@ -63,6 +103,25 @@ namespace CheckTrips360
             return isSelecteDate;
         }
 
+        private static bool ValidateCalendarioFechasVsRequeridaAeroMexico(IWebDriver driver, DateTime requerida, IWebElement calendario)
+        {
+            IReadOnlyCollection<IWebElement> elementsMonths = calendario.FindElements(By.ClassName("DatePickerCalendarMonthRefactored-month"));
+            IReadOnlyCollection<IWebElement> elementsYears = calendario.FindElements(By.ClassName("DatePickerCalendarMonthRefactored-year"));
+
+            if (elementsMonths.Count() > 0)
+            {
+                string year = elementsYears.ElementAt(0).Text.Trim();
+                string month = elementsMonths.ElementAt(0).Text.Trim();
+                string monthName = requerida.ToString("MMMM", new CultureInfo("es-ES")).ToUpper().Trim();
+                if (month.ToUpper() == monthName.ToUpper() && year == requerida.Year.ToString())
+                {
+                    FindDayInCalendarToTriggerClickAeroMexico(driver, requerida, calendario);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private static bool ValidateCalendarioFechasVsRequerida(IWebDriver driver, DateTime requerida, IWebElement calendario)
         {
             IReadOnlyCollection<IWebElement> spanElements = calendario.FindElements(By.CssSelector(PageElements.CssBtnCalendarioFechas));
@@ -74,6 +133,24 @@ namespace CheckTrips360
                 if (array[0].Text.ToUpper() == monthName && array[1].Text.ToUpper() == requerida.Year.ToString())
                 {
                     FindDayInCalendarToTriggerClick(driver, requerida, calendario);
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        private static Boolean FindDayInCalendarToTriggerClickAeroMexico(IWebDriver driver, DateTime requerida, IWebElement calendario)
+        {
+            // Find all the span elements with class "bsdatepickerdaydecorator"
+            IReadOnlyCollection<IWebElement> buttons = calendario.FindElements(By.ClassName("DatePickerCalendarMonthRefactored-day"));
+
+            // Iterate over the found elements
+            foreach (IWebElement button in buttons)
+            {
+                var datetitle = button.FindElements(By.TagName("h4")).ToArray();
+                if (datetitle[0].Text.ToUpper().Trim().Equals(requerida.Day.ToString()))
+                {
+                    button.Click();
                     return true;
                 }
             }

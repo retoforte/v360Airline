@@ -115,7 +115,7 @@ namespace CheckTrips360
                 EndDate = dtpFechaFin.Value,
                 IsRoundTrip = rdbRedondo.Checked,
                 IncludeConexions = chkConexiones.Checked,
-                AirlineCatalogId = ((int)Aerolinea.VIVA),
+                AirlineCatalogId = ((int)this.selectedAerolinea),
                 Emision = txtEmision.Text,
                 MaxResults = int.Parse(String.IsNullOrWhiteSpace(txtMaxResults.Text) ? "100" : txtMaxResults.Text)
             };
