@@ -209,6 +209,7 @@ namespace CheckTrips360
             dtgVuelos.Columns["Horario"].DefaultCellStyle.Font = new Font("Arial", 09, FontStyle.Bold);
 
             dtgVuelos.Columns["CreatedDate"].Visible = true;
+            
             if (this.browser.Quotation.AirlineCatalogId == ((int)Aerolinea.VIVA))
             {
                 dtgVuelos.Columns["Ligth"].DefaultCellStyle.Format = "C2";
@@ -217,7 +218,7 @@ namespace CheckTrips360
             };
             this.vuelosSeleccionados = vuelos;
             dtgVuelos.Sort(dtgVuelos.Columns["CreatedDate"], ListSortDirection.Ascending);
-
+            dtgVuelos.ScrollBars = ScrollBars.Both;
         }
 
         private void btnExportarExcel_Click(object sender, EventArgs e)
@@ -243,6 +244,7 @@ namespace CheckTrips360
             {
                 dtpFechaFin.Enabled = true;
                 rdbSencillo.Checked = false;
+                dtpFechaFin.Value = dtpFechaInicio.Value;
             }
         }
 
@@ -292,6 +294,18 @@ namespace CheckTrips360
             btnViva.FlatAppearance.BorderSize = 5;
             btnAeromexico.FlatAppearance.BorderSize = 0;
             this.selectedAerolinea = Aerolinea.VIVA;
+        }
+
+        private void dtpFechaInicio_ValueChanged(object sender, EventArgs e)
+        {
+            if (rdbRedondo.Checked)
+                dtpFechaFin.Value = dtpFechaInicio.Value;
+        }
+
+        private void chkConexiones_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkConexiones.Checked)
+                txtMaxResults.Text = "4";
         }
     }
 }

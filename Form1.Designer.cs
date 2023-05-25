@@ -205,6 +205,7 @@ namespace CheckTrips360
             this.chkConexiones.TabIndex = 9;
             this.chkConexiones.Text = "Incluir Conexiones";
             this.chkConexiones.UseVisualStyleBackColor = true;
+            this.chkConexiones.CheckedChanged += new System.EventHandler(this.chkConexiones_CheckedChanged);
             // 
             // btnBuscar
             // 
@@ -236,6 +237,7 @@ namespace CheckTrips360
             this.dtpFechaInicio.Name = "dtpFechaInicio";
             this.dtpFechaInicio.Size = new System.Drawing.Size(168, 29);
             this.dtpFechaInicio.TabIndex = 6;
+            this.dtpFechaInicio.ValueChanged += new System.EventHandler(this.dtpFechaInicio_ValueChanged);
             // 
             // label2
             // 
@@ -346,8 +348,8 @@ namespace CheckTrips360
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1071, 716);
-            this.Controls.Add(this.btnExportarExcel);
             this.Controls.Add(this.dtgVuelos);
+            this.Controls.Add(this.btnExportarExcel);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnConnectDb);
@@ -356,7 +358,7 @@ namespace CheckTrips360
             this.Controls.Add(this.button1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Viajes360Mx - Módulo de Busqueda de Vuelos - v1.1.3";
+            this.Text = "Viajes360Mx - Módulo de Busqueda de Vuelos - v1.1.4";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel3.ResumeLayout(false);

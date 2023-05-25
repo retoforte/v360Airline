@@ -31,7 +31,7 @@ namespace CheckTrips360.Utils
                 Tipo = flight.Tipo,
                 NumVuelo = flight.NumVuelo,
                 CreatedDate = flight.CreatedDate,
-                Order = flight.Order
+                Horario = flight.Horario
             };
 
             return vviaFlight;

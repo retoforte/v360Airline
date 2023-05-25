@@ -103,13 +103,8 @@ namespace CheckTrips360.DTO
             set { if (Quotation != null) Quotation.EndDate = Convert.ToDateTime(value); }
         }
 
-        public string Horario
-        {
-            get
-            {
-                  return StartDate.ToString("HH:mm") +"-"+ EndDate.ToString("HH:mm");
-            }
-            set { if (Quotation != null) Quotation.EndDate = Convert.ToDateTime(value); }
-        }
+        
+        public string Horario { get; set; }
+        
     }
 }

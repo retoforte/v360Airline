@@ -128,13 +128,13 @@ namespace CheckTrips360.Buscadores
                     continue;
                 IWebElement bookingDetailsBody = vuelo.FindElement(By.TagName("app-flight-option-details"));
                 // Scroll to the booking element
-                ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView(true);", bookingDetailsBody);
-                if (vueloPos >= 2)
+                ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView(true);", vuelo);
+             /*   if (vueloPos >= 2)
                 {
                     IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
                     js.ExecuteScript("window.scrollBy(0, "+ (50 * vueloPos + (vueloPos / 3) * 200)  + ");");
                     Thread.Sleep(2000);
-                }
+                }*/
 
                 wait.Until(ExpectedConditions.ElementToBeClickable(vuelo));
 
@@ -172,6 +172,7 @@ namespace CheckTrips360.Buscadores
         {
             IWebElement vueloInfo = element.FindElement(By.TagName("app-flight-brief-info"));
             IReadOnlyCollection<IWebElement> horarios = element.FindElements(By.TagName("h4"));
+            flight.Horario = Regex.Replace(horarios.ElementAt(0).Text, @"^\s*(.{7})\s*$", "0$1") + " - " + Regex.Replace(horarios.ElementAt(1).Text, @"^\s*(.{7})\s*$", "0$1");
 
             var datos = horarios.Select(horario => horario.Text.Trim().Replace("AM", "").Replace("PM", "")).ToArray();
             var hora = datos[0].Split(":");
